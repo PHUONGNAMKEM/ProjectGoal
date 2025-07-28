@@ -18,6 +18,7 @@ const CreateBookUncontrolled = (props) => {
     const [preview, setPreview] = useState(null) // luu tru url
     const onFinish = async (value) => {
         if (!thumbnail) {
+            f
             notification.error({
                 message: "Error upload file",
                 description: "Please upload image for this book!"

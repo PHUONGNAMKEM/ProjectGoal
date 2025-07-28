@@ -1,9 +1,9 @@
-import { Button, Table } from "antd";
+// import { Button, Table } from "antd";
 import { useEffect, useState } from "react";
 import { fetchBookAuthAPI } from "../services/api.service";
-import UserForm from "../components/user/user.form";
+// import UserForm from "../components/user/user.form";
 import BookTable from "../components/book/book.table";
-import BookForm from "../components/book/create.book.form.control";
+// import BookForm from "../components/book/create.book.form.control";
 
 const BookPage = () => {
 

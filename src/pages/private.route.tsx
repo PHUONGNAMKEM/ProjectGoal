@@ -1,9 +1,10 @@
 import { useContext } from "react"
 import { AuthContext } from "../components/context/auth.context"
-import { Link, Navigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button, Result } from "antd";
+import { IPrivateRouteProps } from "../interface/IPrivateRouteProps";
 
-const PrivateRoute = (props) => {
+const PrivateRoute = (props: IPrivateRouteProps) => {
     const { user } = useContext(AuthContext);
 
     if (user && user.id) {

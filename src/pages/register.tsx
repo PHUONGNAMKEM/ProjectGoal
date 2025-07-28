@@ -1,19 +1,19 @@
-import { Button, Input, Modal, notification, Row, Col, Form, Divider } from "antd";
-import { registerUserAPI } from "../services/api.service";
+import { Button, Input, notification, Row, Col, Form, Divider } from "antd";
 import { Link, useNavigate } from "react-router-dom";
+import { IRegisterFormValues } from "../interface/IRegisterFormValues";
+import { registerUserAPI } from "../services/api.me.service";
 
 const RegisterPage = () => {
 
     const [form] = Form.useForm();
     const navigate = useNavigate();
-    const onFinish = async (values) => {
-
+    const onFinish = async (values: IRegisterFormValues) => {
         const res = await registerUserAPI(
-            values.fullName,
+            values.username,
             values.email,
             values.password,
-            values.phone
         )
+        console.log(">>> check res", res);
 
         if (res.data) {
             notification.success(
@@ -30,7 +30,7 @@ const RegisterPage = () => {
             notification.error(
                 {
                     message: "Register a user failed",
-                    description: JSON.stringify(res.message),
+                    description: JSON.stringify(res.data.message),
                     duration: 3,
                     showProgress: true,
                 }
@@ -54,8 +54,8 @@ const RegisterPage = () => {
                 <Col xs={24} sm={12} md={12} lg={8}>
                     <Form.Item
                         label="FullName"
-                        name="fullName"
-                        rules={[{ required: true, message: 'Please input your fullname!' }]}
+                        name="username"
+                        rules={[{ required: true, message: 'Please input your full name!' }]}
                     >
                         <Input />
                     </Form.Item>
@@ -105,51 +105,10 @@ const RegisterPage = () => {
                 </Col>
             </Row>
 
-            <Row justify={"center"}>
-                <Col xs={24} sm={12} md={12} lg={8} >
-                    <Form.Item
-                        label="Phone number"
-                        name="phone"
-                        rules={[
-                            {
-                                required: true,
-                                pattern: new RegExp(/\d+/g),
-                                message: 'Please enter a valid phone number!',
-                            },
-                        ]}
-
-                    >
-                        <Input />
-                    </Form.Item>
-                </Col>
-            </Row>
-
             <Row justify={"center"} >
                 <Col xs={24} sm={12} md={12} lg={8} >
                     <div style={{ display: "flex", justifyContent: "space-between" }}>
-                        {/* <Button type="primary" htmlType="submit">Register</Button> */}
                         <Button type="primary" onClick={() => form.submit()}>Register</Button>
-                        <Button onClick={() => {
-                            // form.setFieldValue({
-                            //     email: "thaidagpnam@gmail.com",
-                            // })
-                            // console.log(">>> check form: ", form.getFieldValue());
-
-                            // đây là cách giúp ta render ra email auto bằng cách nhập fullname rồi nhấn nút 
-                            const fullNamefollow = form.getFieldValue("fullName");
-
-                            if (fullNamefollow) {
-                                const generatedEmail = `${fullNamefollow.replace(/\s+/g, "").toLowerCase()}@gmail.com`;
-                                form.setFieldsValue({ email: generatedEmail })
-                            }
-                            else {
-                                notification.warning({
-                                    message: "Missing Full Name",
-                                    description: "Please enter Full Name before generating email",
-                                    duration: 3,
-                                });
-                            }
-                        }}>Generate Email from FullName</Button>
                     </div>
                     <Divider />
                 </Col>

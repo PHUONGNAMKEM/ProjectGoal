@@ -1,7 +1,8 @@
+import Task from "../components/task/task.component";
 
 const TaskPage = () => {
     return (
-        <p>Task page</p>
+        <Task />
     );
 }
 

@@ -1,9 +1,10 @@
 import { ArrowRightOutlined } from "@ant-design/icons";
-import { Button, Card, Col, Divider, Form, Input, message, notification, Row } from "antd";
-import { json, Link, useNavigate } from "react-router-dom";
-import { loginAPI } from "../services/api.service";
+import { Button, Col, Divider, Form, Input, message, notification, Row } from "antd";
+import { FormProps, Link, useNavigate } from "react-router-dom";
+import { loginAPI } from "../services/api.me.service";
 import { useContext, useState } from "react";
 import { AuthContext } from "../components/context/auth.context";
+import { IRegisterFormValues } from "../interface/IRegisterFormValues";
 
 const LoginPage = () => {
 
@@ -12,9 +13,13 @@ const LoginPage = () => {
     const [isLoading, setIsLoading] = useState(false);
     const { setUser } = useContext(AuthContext);
 
-    const onFinish = async (values) => {
+    const onFinish = async (values: IRegisterFormValues) => {
         setIsLoading(true)
-        const res = await loginAPI(values.email, values.password)
+        const res = await loginAPI(values.username, values.password)
+        console.log(">>> check res: ", res);
+
+        console.log(">>> check username", values.username);
+        console.log(">>> check password", values.password);
 
         if (res.data) {
             message.success("Login successfully")
@@ -26,7 +31,7 @@ const LoginPage = () => {
         else {
             notification.error({
                 message: "Error Login",
-                description: JSON.stringify(res.message)
+                // description: JSON.stringify(res.message)
             })
         }
         setIsLoading(false)
@@ -52,7 +57,7 @@ const LoginPage = () => {
                         >
 
                             <h2 style={{ margin: "10px 0", textAlign: "center" }}>Login Now</h2>
-                            <Form.Item
+                            {/* <Form.Item
                                 label="Email"
                                 name="email"
                                 rules={[
@@ -64,6 +69,18 @@ const LoginPage = () => {
                                         type: 'email',
                                         message: 'Please enter a valid email address!'
                                     }
+                                ]}
+                            >
+                                <Input />
+                            </Form.Item> */}
+                            <Form.Item
+                                label="FullName"
+                                name="username"
+                                rules={[
+                                    {
+                                        required: true,
+                                        message: 'Please input your full name!'
+                                    },
                                 ]}
                             >
                                 <Input />

@@ -1,22 +1,25 @@
 import ReactDOM from 'react-dom/client'
-import App from './App.jsx'
+import App from './App.tsx'
 import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
-import LoginPage from './pages/login.jsx';
-import RegisterPage from './pages/register.jsx';
+import LoginPage from './pages/login.tsx';
+import RegisterPage from './pages/register.tsx';
 import BookPage from './pages/book.jsx';
 import UserPage from './pages/user.jsx';
 import "./styles/global.css"
-import TodoApp from './components/todo/TodoApp.jsx';
-import ErrorPage from './pages/error.jsx';
-import SettingPage from './pages/setting.jsx';
-import { AuthWrapper } from './components/context/auth.context.jsx';
-import PrivateRoute from './pages/private.route.jsx';
-import BodyPage from './components/layout/bodypage.jsx';
-import GoalPage from './pages/goal.jsx';
-import TaskPage from './pages/task.jsx';
+// import TodoApp from './components/todo/TodoApp.jsx';
+import ErrorPage from './pages/error.tsx';
+import SettingPage from './pages/setting.tsx';
+import { AuthWrapper } from './components/context/auth.context.tsx';
+import PrivateRoute from './pages/private.route.tsx';
+import BodyPage from './components/layout/bodypage.tsx';
+import GoalPage from './pages/goal.tsx';
+import TaskPage from './pages/task.tsx';
+import GoalDetail from './components/goal/goalDetail/goalDetail.tsx';
+
+import './styles/global.css';
 
 const router = createBrowserRouter([
   {
@@ -37,6 +40,10 @@ const router = createBrowserRouter([
             element: <UserPage />,
           },
           {
+            path: "/api/users",
+            element: <UserPage />,
+          },
+          {
             path: "/books",
             element: (<PrivateRoute>
               <BookPage />
@@ -49,6 +56,10 @@ const router = createBrowserRouter([
           {
             path: "/goal",
             element: <GoalPage />,
+          },
+          {
+            path: "/goal/:id",
+            element: <GoalDetail />,
           },
           {
             path: "/tasks",
@@ -70,10 +81,12 @@ const router = createBrowserRouter([
 ]);
 
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+ReactDOM.createRoot(document.getElementById('root')!).render(
   // <React.StrictMode>
   <AuthWrapper>
     <RouterProvider router={router} />
   </AuthWrapper>
   // </React.StrictMode>,
 )
+
+

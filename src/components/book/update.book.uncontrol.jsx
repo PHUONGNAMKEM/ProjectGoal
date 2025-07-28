@@ -98,11 +98,6 @@ const BookUpdateUncontrolled = (props) => {
 
     return (
         <div className="user-form" style={{ margin: "10px 0", }}>
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
-                <h3>Table Books</h3>
-                <Button onClick={() => setIsModalUpdateOpen(true)} type="primary">Create Book</Button>
-            </div>
-
             <Modal
                 title="Update Book Uncontrolled"
                 closable={{ 'aria-label': 'Custom Close Button' }}

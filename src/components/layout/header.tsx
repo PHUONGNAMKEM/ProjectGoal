@@ -1,20 +1,19 @@
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 // import "./header.css"
-import { Menu, message } from "antd";
+import { Menu, MenuProps, message } from "antd";
 import {
     HomeOutlined,
     UsergroupDeleteOutlined,
     BookOutlined,
-    SettingOutlined,
+    // SettingOutlined,
     LoginOutlined,
     AliwangwangOutlined
 } from '@ant-design/icons';
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { useLocation } from "react-router-dom";
 import { AuthContext } from "../context/auth.context";
-import { logoutAPI } from "../../services/api.service";
-
-
+import { logoutAPI } from "../../services/api.me.service";
+import { Rank, Role } from "../../types/UserType";
 
 const Header = () => {
     const location = useLocation();
@@ -25,9 +24,10 @@ const Header = () => {
     const path = location.pathname;
 
     // Lay path theo key của item trong items, được quản lý bởi current
-    const [current, setCurrent] = useState('');
-    const onClick = (e) => {
-        // setCurrent(e.key);
+    // const [current, setCurrent] = useState('');
+
+    const onClick: MenuProps['onClick'] = (e) => {
+        console.log('Clicked key:', e.key);
     };
 
     const handleLogout = async () => {
@@ -35,14 +35,17 @@ const Header = () => {
         if (res.data) {
             // clear data
             localStorage.removeItem("access_token")
-            setUser({
-                email: "",
-                phone: "",
-                fullName: "",
-                role: "",
-                avatar: "",
-                id: ""
-            });
+            setUser(
+                //     {
+                //     idUser: 1,
+                //     username: "",
+                //     email: "",
+                //     role: Role.USER,
+                //     rank: Rank.BRONZE,
+                //     point: 0
+                // }
+                null
+            );
             message.success("Logout successfully")
 
             // redirect user to home page
@@ -64,28 +67,10 @@ const Header = () => {
         {
             label: <Link to={"/books"}>Books</Link>,
             key: 'books',
-            icon: <BookOutlined />,
-            // children: [
-            //     {
-            //         type: 'group',
-            //         label: 'Item 1',
-            //         children: [
-            //             { label: 'Option 1', key: 'setting:1' },
-            //             { label: 'Option 2', key: 'setting:2' },
-            //         ],
-            //     },
-            //     {
-            //         type: 'group',
-            //         label: 'Item 2',
-            //         children: [
-            //             { label: 'Option 3', key: 'setting:3' },
-            //             { label: 'Option 4', key: 'setting:4' },
-            //         ],
-            //     },
-            // ],
+            icon: <BookOutlined />
         },
 
-        ...(!user.id ? [
+        ...(!user ? [
             {
                 label: <Link to={"/login"}>Login</Link>,
                 key: 'login',
@@ -97,9 +82,9 @@ const Header = () => {
                 icon: <UsergroupDeleteOutlined />,
             },] : []),
 
-        ...(user.id ? [
+        ...(user ? [
             {
-                label: `Welcome ${user.fullName}`,
+                label: `Welcome ${user.username}`,
                 key: 'settings',
                 icon: <AliwangwangOutlined />,
                 children: [

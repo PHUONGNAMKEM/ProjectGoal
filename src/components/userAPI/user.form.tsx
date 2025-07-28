@@ -1,38 +1,38 @@
 import { Button, Input, notification, Modal } from 'antd';
 import { useState } from 'react';
-import { createUserAPI } from '../../services/api.service';
+import { createUserAPI } from '../../services/api.me.service';
+import { UserFormProps } from '../../types/UserForm';
 
-const UserForm = (props) => {
+const UserForm: React.FC<UserFormProps> = ({ loadUser }) => {
 
-    const { loadUser } = props;
+    // const { loadUser } = props;
 
     const [fullName, setFullName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [phone, setPhone] = useState("");
 
 
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const handleClickBtn = async () => {
-        const res = await createUserAPI(fullName, email, password, phone);
-        if (res.data) {
+        const res = await createUserAPI(fullName, email, password);
+        try {
             notification.success(
                 {
                     message: "Create A New User",
-                    description: "Create successfully" + " at " + res.data.createdAt + " and FullName is: " + fullName + " with email: " + res.data.email + " and phone is: " + res.data.phone,
+                    description: "Create successfully" + " at " + res.data.createdAt + " and FullName is: " + fullName + " with email: " + res.data.email,
                     duration: 3,
                     showProgress: true,
                 }
             )
             resetAndCloseModal();
             await loadUser();
-        }
-        else {
+        } catch (error) {
+            const errorMessage = res?.data?.message || "Unknown error";
             notification.error(
                 {
                     message: "Error Create A New User Failed",
-                    description: JSON.stringify(res.message),
+                    description: errorMessage,
                     duration: 3,
                     showProgress: true,
                 }
@@ -45,7 +45,6 @@ const UserForm = (props) => {
         setFullName("")
         setEmail("")
         setPassword("")
-        setPhone("")
     }
 
     return (
@@ -83,11 +82,7 @@ const UserForm = (props) => {
                         <Input.Password value={password}
                             onChange={(event) => setPassword(event.target.value)} placeholder="Enter your Password" />
                     </div>
-                    <div>
-                        <span>Phone number</span>
-                        <Input value={phone}
-                            onChange={(event) => setPhone(event.target.value)} placeholder="Enter your Phone number" />
-                    </div>
+
                 </div>
             </Modal>
         </div>

@@ -1,39 +1,48 @@
 import {
     AimOutlined,
-    BookOutlined,
-    CaretLeftOutlined,
-    CaretRightOutlined,
-    DesktopOutlined,
+    // BookOutlined,
+    // CaretLeftOutlined,
+    // CaretRightOutlined,
+    // DesktopOutlined,
     FileDoneOutlined,
-    FileOutlined,
-    HomeOutlined,
+    // FileOutlined,
+    // HomeOutlined,
     LeftOutlined,
     PieChartOutlined,
-    RadarChartOutlined,
+    // RadarChartOutlined,
     RightOutlined,
     RocketOutlined,
     SettingOutlined,
-    TeamOutlined,
-    UsergroupDeleteOutlined,
+    // TeamOutlined,
+    // UsergroupDeleteOutlined,
     UserOutlined,
 } from '@ant-design/icons';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import { MenuProps } from 'rc-menu';
 import { useState } from 'react';
 import { Link, Outlet } from 'react-router-dom';
+import './layoutStyle/bodyPageStyle.scss'
+
+type MenuItem = Required<MenuProps>['items'][number];
 
 const BodyPage = () => {
-    const { Header, Content, Footer, Sider } = Layout;
-    function getItem(label, key, icon, children) {
+    const { Header, Content, Sider } = Layout;
+    function getItem(
+        label: React.ReactNode,
+        key: React.Key,
+        icon?: React.ReactNode,
+        children?: MenuItem[]
+    ): MenuItem {
         return {
             key,
             icon,
             children,
             label,
-        };
+        } as MenuItem;
     }
     const [collapsed, setCollapsed] = useState(false);
 
-    const items = [
+    const items: MenuItem[] = [
         getItem(<Link to={"/goal"}>Goal</Link>, 'goal', <AimOutlined />),
         getItem(<Link to={"/tasks"}>Tasks</Link>, 'tasks', <FileDoneOutlined />),
         getItem('User', 'user', <UserOutlined />, [
@@ -53,8 +62,8 @@ const BodyPage = () => {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
 
-    const [breadcrumbTitle, setBreadcrumbTitle] = useState([{ title: 'Task' }]);
-    const breadcrumbMap = {
+    const [breadcrumbTitle, setBreadcrumbTitle] = useState<{ title: string }[]>([{ title: 'Task' }]);
+    const breadcrumbMap: Record<string, string[]> = {
         goal: ['Goal'],
         tasks: ['Tasks'],
         user: ['User'],
@@ -68,7 +77,16 @@ const BodyPage = () => {
         analytics: ['Analytics'],
     };
 
-    const path = location.pathname;
+    // const path = location.pathname;
+
+    // Change color theme
+    const switchTheme = (theme: 'primary' | 'secondary' | 'third') => {
+        document.documentElement.style.setProperty(
+            '--theme-current',
+            getComputedStyle(document.documentElement).getPropertyValue(`--theme-${theme}`)
+        );
+    };
+
 
     return (
         <Layout style={{ minHeight: '100vh' }}>
@@ -78,8 +96,8 @@ const BodyPage = () => {
                 trigger={
                     <div
                         style={{
-                            backgroundColor: '#4eb8f7',
-                            color: '#fff',
+                            backgroundColor: 'var(--theme-current)',
+                            color: 'rgb(169, 168, 168)',
                             height: 48,
                             lineHeight: '48px',
                             textAlign: 'center',
@@ -97,18 +115,25 @@ const BodyPage = () => {
                     theme='light'
                     mode="inline"
                     items={items}
-                    onClick={({ key }) => {
-                        const path = breadcrumbMap[key];
+                    onClick={(info: { key: string }) => {
+                        // console.log("check info: ", info)
+                        const path = breadcrumbMap[info.key];
                         if (path) {
+                            // console.log(">>> check path: ", path);
                             setBreadcrumbTitle(path.map(p => ({ title: p })))
-                            console.log(">>> check breadcrumbtitle: ", breadcrumbTitle);
+                            // console.log(">>> check breadcrumbtitle: ", breadcrumbTitle);
                         }
                     }}
-
                 />
             </Sider>
-            <Layout style={{ background: "#f0f6ff" }}>
-                <Header style={{ padding: 0, background: colorBgContainer }} />
+            <Layout style={{ background: "var(--theme-current)" }}>
+                <Header style={{ padding: 0, background: colorBgContainer }}>
+                    <div className="themeColor">
+                        <button onClick={() => switchTheme('secondary')} className="changeThemeColor secondary-theme"></button>
+                        <button onClick={() => switchTheme('primary')} className="changeThemeColor primary-theme"></button>
+                        <button onClick={() => switchTheme('third')} className="changeThemeColor third-theme"></button>
+                    </div>
+                </Header>
                 <Content style={{ margin: '0 16px', }}>
                     <Breadcrumb style={{ margin: '16px 0' }} items={breadcrumbTitle} />
                     {/* <div>
@@ -118,8 +143,11 @@ const BodyPage = () => {
                         style={{
                             padding: 24,
                             minHeight: 360,
-                            background: "#fff",
+                            background: "rgb(247 247 247)",
                             borderRadius: borderRadiusLG,
+                            border: "1px solid #ccc",
+                            position: "relative"
+                            // boxShadow: "rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px"
                         }}
                     >
                         <Outlet />
