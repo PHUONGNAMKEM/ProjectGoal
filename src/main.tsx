@@ -55,16 +55,20 @@ const router = createBrowserRouter([
           },
           {
             path: "/goal",
+            index: true,
             element: <GoalPage />,
           },
           {
-            path: "/goal/:id",
-            element: <GoalDetail />,
+            path: "/goal/:idGoal/tasks",
+            element: <TaskPage />,
           },
           {
             path: "/tasks",
-            index: true,
             element: <TaskPage />,
+          },
+          {
+            path: "/tasks/:id",
+            element: <GoalDetail />,
           },
         ]
       }

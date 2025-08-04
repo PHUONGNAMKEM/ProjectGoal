@@ -1,33 +1,32 @@
-import { Button, ColorPicker, Dropdown, Flex, MenuProps, notification, Popconfirm, Progress, Space, Tag } from "antd";
+import { ColorPicker, Dropdown, Flex, MenuProps, notification, Popconfirm, Progress, Space, Tag } from "antd";
 import { useEffect, useState } from "react";
 import { HiOutlineBookmark } from "react-icons/hi";
 import './goalComponent.scss';
 import { Link } from "react-router-dom";
 import { GoalType } from "../../../types/GoalType";
 import dayjs from "dayjs";
-import { DashOutlined, DownOutlined, SettingOutlined } from "@ant-design/icons";
-import { deleteGoalAPI } from "../../../services/api.me.service";
-import CreateBookUncontrolled from "../../book/create.book.form.uncontrolled";
+import { DashOutlined, SettingOutlined } from "@ant-design/icons";
+import { deleteGoalAPI, getTypeofGoalAPI } from "../../../services/api.me.service";
 import GoalUpdate from "../goalUpdate/goalUpdate";
 import TextArea from "antd/es/input/TextArea";
+import { GoalLabel } from "../../../types/GoalLabel";
+import DOMPurify from 'dompurify';
 
 interface GoalProps {
     goalData: GoalType;
     loadGoal: () => void;
+    typeofGoalData: GoalLabel[];
 }
 
-const Goal = ({ goalData, loadGoal }: GoalProps) => {
+const Goal = ({ goalData, loadGoal, typeofGoalData }: GoalProps) => {
 
     const [colorHex, setColorHex] = useState('#1677ff');
     const [bookMark, setBookMark] = useState(false);
 
-    console.log(">>> check goalData", goalData);
-
-    const goalId = 1;
-
     const handleToggle = () => {
         setBookMark(prev => !prev);
     }
+    console.log(">>> check typeofGoalData: ", typeofGoalData);
 
     const end = dayjs(goalData.endDate);
     const now = dayjs();
@@ -108,9 +107,26 @@ const Goal = ({ goalData, loadGoal }: GoalProps) => {
 
     return (
         <div className="goal-card" style={{ ['--color-hex' as string]: colorHex, }}>
-            <div className="goal-card-content">
-                <div className="goal-card-content-top" style={{ display: "flex", justifyContent: "space-between" }}>
-                    <Link to={`/goal/${goalId}`} className="goal-card-title" style={{ fontSize: "20px", fontWeight: "500", marginBottom: "6px", color: "rgba(70, 69, 60, 1)" }}>{goalData.title}</Link>
+            <div className="goal-card-content" style={{
+                flex: 1,
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "space-around",
+            }}>
+                <div className="goal-card-content-top" style={{ display: "flex", justifyContent: "space-between", }}>
+                    <Link to={`/goal/${goalData.idGoal}/tasks/`} className="goal-card-title"
+                        style={{
+                            fontSize: "20px",
+                            lineHeight: "24px",
+                            fontWeight: "500",
+                            marginBottom: "6px",
+                            color: "rgba(70, 69, 60, 1)",
+                            display: "-webkit-box",
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: "vertical",
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                        }}>{goalData.title}</Link>
                     <Dropdown menu={{ items }} placement="topRight">
                         <a onClick={(e) => e.preventDefault()}>
                             <Space>
@@ -119,7 +135,7 @@ const Goal = ({ goalData, loadGoal }: GoalProps) => {
                         </a>
                     </Dropdown>
                 </div>
-                <TextArea
+                {/* <TextArea
                     autoSize={{ maxRows: 2 }}
                     readOnly
                     spellCheck={false}
@@ -133,8 +149,25 @@ const Goal = ({ goalData, loadGoal }: GoalProps) => {
                         caretColor: 'transparent'
                     }}
                     value={goalData.description}
+                /> */}
+                <div
+                    style={{
+                        color: "#aab6c7",
+                        padding: 0,
+                        margin: 0,
+                        outline: 'none',
+                        display: "-webkit-box",
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                        lineHeight: '1.5em',
+                        maxHeight: '3em',
+                    }}
+                    // dangerouslySetInnerHTML={{ __html: goalData.description }}
+                    dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(goalData.description) }}
                 />
-                <div className="gap10" style={{ height: "10px" }}></div>
+
 
                 <Flex gap="4px 0" wrap style={{ marginBottom: "14px" }}>
                     <Tag color="red">red</Tag>
@@ -145,18 +178,8 @@ const Goal = ({ goalData, loadGoal }: GoalProps) => {
                     <Tag color="purple">purple</Tag>
                 </Flex>
 
-                {/* <p>IN PROGRESS</p> */}
-                {/* <Flex align="center" gap="small">
-                    <Progress
-                        type="circle"
-                        trailColor="#e6f4ff"
-                        percent={90}
-                        strokeWidth={20}
-                        size={14}
-                        format={(number) => `Time left${number}%`}
-                    />
-                    <span>Time left</span>
-                </Flex> */}
+                <div>{typeofGoalData.find(type => type.idGoal === goalData.idGoal)?.nameType || <div>No type</div>}</div>
+
                 <Flex gap="4px 0" wrap style={{ marginBottom: "14px" }}>
                     <Progress percent={goalData.progress} percentPosition={{ align: 'start', type: 'outer' }} />
                 </Flex>
@@ -172,7 +195,7 @@ const Goal = ({ goalData, loadGoal }: GoalProps) => {
             }}>
                 <div className="goal-card-bottom-left" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "10px" }}>
                     {!bookMark ? (
-                        <HiOutlineBookmark style={{ fontSize: 30, color: "rgb(169, 168, 168)" }} onClick={() => {
+                        <HiOutlineBookmark style={{ fontSize: 26, color: "rgb(169, 168, 168)" }} onClick={() => {
                             handleToggle()
                         }} />
                     )
@@ -180,9 +203,8 @@ const Goal = ({ goalData, loadGoal }: GoalProps) => {
                         (
                             <HiOutlineBookmark
                                 onClick={() => handleToggle()}
-                                style={{ fontSize: 30, color: "rgba(246, 210, 7, 1)", fill: "orange", cursor: 'pointer' }}
+                                style={{ fontSize: 26, color: "rgba(246, 210, 7, 1)", fill: "orange", cursor: 'pointer' }}
                             />
-
                         )
                     }
                     <ColorPicker value={colorHex}
@@ -195,11 +217,13 @@ const Goal = ({ goalData, loadGoal }: GoalProps) => {
                 </div>
 
                 <div> <p style={{ color: "rgba(70, 69, 60, 1)", fontWeight: "500" }}>
-                    {remainingDays > 0
-                        ? `${remainingDays} days left`
-                        : remainingDays === 0
-                            ? "Deadline in Today, coming soon!"
-                            : "Deadline passed"}
+                    {
+                        goalData.progress === 100 ? <div style={{ display: "flex", alignItems: "center" }}>Goal Done! <img src="/images/firework.png" alt="" style={{ maxWidth: "20px", marginLeft: "4px" }} /> </div> : remainingDays > 0
+                            ? `${remainingDays} days left`
+                            : remainingDays === 0
+                                ? "Deadline is coming soon!"
+                                : "Deadline passed"
+                    }
                 </p></div>
             </div>
             {
@@ -212,9 +236,7 @@ const Goal = ({ goalData, loadGoal }: GoalProps) => {
                     />
                 )
             }
-        </div>
-
-
+        </div >
     )
 }
 

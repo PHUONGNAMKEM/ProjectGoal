@@ -135,7 +135,10 @@ const BodyPage = () => {
                     </div>
                 </Header>
                 <Content style={{ margin: '0 16px', }}>
-                    <Breadcrumb style={{ margin: '16px 0' }} items={breadcrumbTitle} />
+                    <div className='content-header' style={{ display: "flex", width: "100%", alignItems: "center", justifyContent: "space-between", padding: "0 2px" }}>
+                        <Breadcrumb style={{ margin: '16px 0' }} items={breadcrumbTitle} />
+                        <p>hhehe</p>
+                    </div>
                     {/* <div>
                         <h2 style={{ margin: "16px 0px" }}>Title of Goal</h2>
                     </div> */}

@@ -1,13 +1,11 @@
-import { Button, ColorPicker, DatePicker, Dropdown, Flex, Input, InputNumber, MenuProps, Modal, notification, Popconfirm, Progress, Radio, Select, Space, Tag } from "antd";
+import { DatePicker, Input, Modal, notification, Radio, } from "antd";
 import { useEffect, useState } from "react";
-import { HiOutlineBookmark } from "react-icons/hi";
 import './goalUpdate.scss';
-import { Link } from "react-router-dom";
 import { GoalType } from "../../../types/GoalType";
-import dayjs, { Dayjs, extend } from "dayjs";
-import { DashOutlined, SettingOutlined } from "@ant-design/icons";
-import { createGoalAPI, deleteGoalAPI, updateGoalAPI } from "../../../services/api.me.service";
+import dayjs, { Dayjs } from "dayjs";
+import { updateGoalAPI } from "../../../services/api.me.service";
 import TextArea from "antd/es/input/TextArea";
+import RichEditor from "../../richTextEditor/RichEditor";
 
 interface GoalUpdateProps {
     isModalOpen: boolean;
@@ -23,19 +21,23 @@ const GoalUpdate = ({ isModalOpen, setIsModalOpen, goal, loadGoal }: GoalUpdateP
     const [endDate, setEndDate] = useState<Dayjs | null>(dayjs().add(3, "day"));
     const [isPublic, setIsPublic] = useState<boolean | null>(null);
 
-    const handleChange = (e: any) => {
+    const handleChangePublic = (e: any) => {
         setIsPublic(e.target.value);
         console.log("Đã chọn: ", e.target.value ? "Public" : "No Public");
     };
 
+
     useEffect(() => {
         if (goal) {
             setTitle(goal.title || "");
-            setDescription(goal.description || "");
+            // Phải truyền vào HTML, ko được truyền vào plaintext thuần, sẽ bị bỏ qua và ko hiển thị content
+            const desc = goal.description ?? '';
+            const isHtml = /<[a-z][\s\S]*>/i.test(desc);
+            setDescription(isHtml ? desc : `<p>${desc}</p>`);
             setEndDate(goal.endDate ? dayjs(goal.endDate) : dayjs().add(3, "day"));
             setIsPublic(goal.isPublic ?? null);
         }
-    }, [goal])
+    }, [isModalOpen, goal])
 
     const handleUpdateGoal = async () => {
         if (!title || !description || !endDate) {
@@ -47,11 +49,13 @@ const GoalUpdate = ({ isModalOpen, setIsModalOpen, goal, loadGoal }: GoalUpdateP
         }
 
         try {
+            // const plainTextDescription = description.replace(/<[^>]+>/g, '');
             const res = await updateGoalAPI(
                 goal.idGoal,
                 title,
                 description,
-                endDate.toISOString(),
+                // plainTextDescription,
+                endDate.format('YYYY/MM/DD'),
                 isPublic
             );
 
@@ -98,20 +102,29 @@ const GoalUpdate = ({ isModalOpen, setIsModalOpen, goal, loadGoal }: GoalUpdateP
                     </div>
                     <div>
                         <span>Description</span>
-                        <TextArea
+                        {/* <TextArea
                             placeholder="Describe for your Stunning Goal"
                             autoSize={{ minRows: 2, maxRows: 6 }}
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
+                        >
+                        </TextArea> */}
+
+                        <RichEditor
+                            value={description}
+                            onChange={(value) => {
+                                setDescription(value)
+                            }}
+                            key={isModalOpen.toString()}
                         />
                     </div>
                     <div>
                         <span>End Date</span>
-                        <DatePicker onChange={(date) => setEndDate(date)} style={{ width: '100%' }} />
+                        <DatePicker value={endDate} onChange={(date) => setEndDate(date)} style={{ width: '100%' }} />
                     </div>
                     <div>
                         <div style={{ width: "100%" }}>
-                            <Radio.Group onChange={handleChange} value={isPublic}>
+                            <Radio.Group onChange={handleChangePublic} value={isPublic}>
                                 <Radio value={true}>Public</Radio>
                                 <Radio value={false}>No Public</Radio>
                             </Radio.Group>

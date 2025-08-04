@@ -121,9 +121,41 @@ const updateGoalAPI = (id, title, description, endDate, isPublic) => {
     return axios.put(URL_BACKEND, data)
 }
 
+const getTypeofGoalAPI = (idGoal) => {
+    const URL_BACKEND = `/api/type-of-goal/${idGoal}`;
+    return axios.get(URL_BACKEND);
+}
+
+const getTaskByIdGoal = (idGoal) => {
+    const URL_BACKEND = `api/goal/${idGoal}/task`;
+    return axios.get(URL_BACKEND);
+}
+
+const changeStatusTask = (idGoal, idTask, newStatus) => {
+    const URL_BACKEND = `api/goal/${idGoal}/task/${idTask}`;
+    const data = {
+        isDone: newStatus
+    }
+    return axios.put(URL_BACKEND, data);
+}
+
+const createTask = (idTask, newStatus) => {
+    const URL_BACKEND = `api/task/${idTask}`;
+    const data = {
+        isDone: newStatus
+    }
+    return axios.put(URL_BACKEND, data);
+}
+
+const getAllColumn = (idGoal) => {
+    const URL_BACKEND = `/api/goal/${idGoal}/column`;
+    return axios.get(URL_BACKEND);
+}
+
 export {
     createUserAPI, updateUserAPI, fetchUserAPI, deleteUserAPI,
     registerUserAPI,
     loginAPI, getAccountAPI, logoutAPI, fetchGoalAPI, deleteGoalAPI, createGoalAPI,
-    updateGoalAPI
+    updateGoalAPI, getTypeofGoalAPI, getTaskByIdGoal, changeStatusTask, getAllColumn,
+    createTask
 }
