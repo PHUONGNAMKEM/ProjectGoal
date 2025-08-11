@@ -3,6 +3,7 @@ export interface TaskType {
     title: string;
     isDone: boolean;
     description: string;
+    startDate: string;
     dueDate: string;
     createdAt: string;
     updatedAt: string;

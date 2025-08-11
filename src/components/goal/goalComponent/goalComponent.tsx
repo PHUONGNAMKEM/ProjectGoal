@@ -8,7 +8,6 @@ import dayjs from "dayjs";
 import { DashOutlined, SettingOutlined } from "@ant-design/icons";
 import { deleteGoalAPI, getTypeofGoalAPI } from "../../../services/api.me.service";
 import GoalUpdate from "../goalUpdate/goalUpdate";
-import TextArea from "antd/es/input/TextArea";
 import { GoalLabel } from "../../../types/GoalLabel";
 import DOMPurify from 'dompurify';
 

@@ -9,7 +9,7 @@ import { Editor } from 'primereact/editor';
 import './richEditor.scss'
 
 type RichEditorProps = {
-    value: string;
+    value: string | undefined;
     onChange: (value: string) => void;
     placeholder?: string;
 };

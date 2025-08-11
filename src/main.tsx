@@ -18,8 +18,7 @@ import BodyPage from './components/layout/bodypage.tsx';
 import GoalPage from './pages/goal.tsx';
 import TaskPage from './pages/task.tsx';
 import GoalDetail from './components/goal/goalDetail/goalDetail.tsx';
-
-import './styles/global.css';
+import Analytics from './pages/analytics.tsx';
 
 const router = createBrowserRouter([
   {
@@ -69,6 +68,10 @@ const router = createBrowserRouter([
           {
             path: "/tasks/:id",
             element: <GoalDetail />,
+          },
+          {
+            path: "/analytics",
+            element: <Analytics />,
           },
         ]
       }

@@ -11,13 +11,15 @@ import { Color } from "antd/es/color-picker";
 import { useDraggable } from "@dnd-kit/core";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities"
+import { EllipsisVertical } from "lucide-react";
 
 interface TaskProps {
     taskData: TaskType;
     loadTask: () => void;
+    onClick: () => void;
 }
 
-const Task = ({ taskData, loadTask }: TaskProps) => {
+const Task = ({ taskData, loadTask, onClick }: TaskProps) => {
     // const { attributes, listeners, setNodeRef, transform } = useDraggable({
     //     id: taskData.idTask
     // })
@@ -29,13 +31,11 @@ const Task = ({ taskData, loadTask }: TaskProps) => {
     const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
         useSortable({ id: taskData.idTask });
 
-
     const style = {
         transform: CSS.Transform.toString(transform),
         transition,
         zIndex: isDragging ? 50 : 'auto',
     };
-
 
     // const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: taskData.idTask })
 
@@ -102,6 +102,7 @@ const Task = ({ taskData, loadTask }: TaskProps) => {
         //rgb(229, 228, 228)
         setStarColor(prev => !prev);
     }
+
     return (
         <>
             {/* <div className="matrix-manage-time">
@@ -124,36 +125,38 @@ const Task = ({ taskData, loadTask }: TaskProps) => {
                         display: "flex",
                         alignItems: "center",
                         backgroundColor: isDisabled ? "#f6f6f6" : "#fff",
-                        cursor: isDisabled ? "not-allowed" : "default",
+                        cursor: isDisabled ? "not-allowed" : "pointer",
                         opacity: isDisabled ? 0.6 : 1,
                         padding: "10px",
                         borderRadius: "5px",
-                        // boxShadow: "rgba(0, 0, 0, 0.05) 0px 6px 24px 0px, rgba(0, 0, 0, 0.08) 0px 0px 0px 1px"
-                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px"
+                        boxShadow: "rgba(99, 99, 99, 0.2) 0px 2px 8px 0px",
                     }}>
 
                     <div className="task-content"
                         style={{
                             flex: 1,
                             lineHeight: "22px",
-                            color: isDisabled ? "#888" : "#000"
+                            color: isDisabled ? "#888" : "#000",
                         }}
                         {...listeners}
                         {...attributes}
                     >
                         {taskData.title}
                     </div>
-                    <div className="task-status" style={{ display: "flex", justifyContent: "space-between" }}>
+                    <div className="flex items-center justify-between task-status">
                         <Checkbox onChange={onChangeStatus} disabled={isDisabled} />
-                        {
+                        {/* {
                             !starColor ?
                                 <StarOutlined style={{ marginLeft: "8px", fontSize: 18, color: "rgb(229, 228, 228)", fill: 'orange' }} onClick={changeStar} />
                                 :
                                 <StarFilled style={{ marginLeft: "8px", fontSize: 18, color: "rgba(246, 210, 7, 1)", fill: 'orange' }} onClick={changeStar} />
-                        }
+                        } */}
+                        <EllipsisVertical size={16}
+                            onClick={() => onClick()}
+                        />
                     </div>
+                    <UndoOutlined style={{ marginLeft: "8px", position: "relative", fontSize: 16, color: "rgb(94, 94, 94)", cursor: "pointer" }} onClick={onRollBackStatus} />
                 </div>
-                <UndoOutlined style={{ margin: "0 10px", fontSize: 16, color: "rgb(94, 94, 94)", cursor: "pointer" }} onClick={onRollBackStatus} />
             </div>
 
         </>

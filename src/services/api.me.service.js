@@ -98,6 +98,11 @@ const fetchGoalAPI = () => {
     return axios.get(URL_BACKEND)
 }
 
+const getGoalByIdAPI = (idGoal) => {
+    const URL_BACKEND = `/api/goal/${idGoal}`;
+    return axios.get(URL_BACKEND)
+}
+
 const deleteGoalAPI = (id) => {
     const URL_BACKEND = `/api/goal/${id}`;
     return axios.delete(URL_BACKEND)
@@ -132,30 +137,94 @@ const getTaskByIdGoal = (idGoal) => {
 }
 
 const changeStatusTask = (idGoal, idTask, newStatus) => {
-    const URL_BACKEND = `api/goal/${idGoal}/task/${idTask}`;
+    const URL_BACKEND = `api/goal/${idGoal}/task/${idTask}/status`;
     const data = {
         isDone: newStatus
     }
     return axios.put(URL_BACKEND, data);
 }
 
-const createTask = (idTask, newStatus) => {
-    const URL_BACKEND = `api/task/${idTask}`;
-    const data = {
-        isDone: newStatus
-    }
-    return axios.put(URL_BACKEND, data);
-}
-
-const getAllColumn = (idGoal) => {
+const getAllColumnAPI = (idGoal) => {
     const URL_BACKEND = `/api/goal/${idGoal}/column`;
     return axios.get(URL_BACKEND);
+}
+
+const createColumnAPI = (idGoal, title) => {
+    const URL_BACKEND = `/api/goal/${idGoal}/column`;
+    const data = {
+        title
+    }
+    return axios.post(URL_BACKEND, data);
+}
+
+const deleteColumnAPI = (idGoal, idColumn) => {
+    const URL_BACKEND = `/api/goal/${idGoal}/column/${idColumn}`;
+    return axios.delete(URL_BACKEND);
+}
+
+const createTaskAPI = (title, dueDate, idGoal, idColumn) => {
+    const URL_BACKEND = `/api/goal/${idGoal}/task`;
+    const data = {
+        title,
+        dueDate,
+        idColumn,
+    }
+    return axios.post(URL_BACKEND, data);
+}
+
+const updateTaskColumn = (idGoal, idTask, newColumnId) => {
+    const URL_BACKEND = `/api/goal/${idGoal}/task/${idTask}/move`;
+    const data = {
+        newColumnId
+    }
+    return axios.put(URL_BACKEND, data);
+}
+const updateTaskOrders = (idGoal, tasks) => {
+    const URL_BACKEND = `/api/goal/${idGoal}/task/reorder`;
+    const data = {
+        tasks: tasks
+    }
+    return axios.put(URL_BACKEND, data);
+}
+
+const updateTaskAPI = (idGoal, idTask, title, startDate, dueDate) => {
+    const URL_BACKEND = `/api/goal/${idGoal}/task/${idTask}`;
+    const data = {
+        title,
+        startDate,
+        dueDate
+    }
+    return axios.put(URL_BACKEND, data);
+}
+
+const updateTitleColumnAPI = (idGoal, idColumn, title) => {
+    const URL_BACKEND = `/api/goal/${idGoal}/column/${idColumn}`;
+    const data = {
+        title
+    }
+    return axios.put(URL_BACKEND, data);
+}
+
+const updateTitleTaskAPI = (idGoal, idTask, title, startDate, dueDate) => {
+    const URL_BACKEND = `/api/goal/${idGoal}/task/${idTask}`;
+    const data = {
+        title,
+        startDate,
+        dueDate
+    }
+    return axios.put(URL_BACKEND, data);
+}
+
+const deleteTaskAPI = (idGoal, idTask) => {
+    const URL_BACKEND = `/api/goal/${idGoal}/task/${idTask}`;
+    return axios.delete(URL_BACKEND);
 }
 
 export {
     createUserAPI, updateUserAPI, fetchUserAPI, deleteUserAPI,
     registerUserAPI,
     loginAPI, getAccountAPI, logoutAPI, fetchGoalAPI, deleteGoalAPI, createGoalAPI,
-    updateGoalAPI, getTypeofGoalAPI, getTaskByIdGoal, changeStatusTask, getAllColumn,
-    createTask
+    updateGoalAPI, getTypeofGoalAPI, getTaskByIdGoal, changeStatusTask, getAllColumnAPI,
+    createColumnAPI, deleteColumnAPI, createTaskAPI, updateTaskColumn, updateTaskOrders,
+    updateTitleColumnAPI, updateTitleTaskAPI, deleteTaskAPI, getGoalByIdAPI
 }

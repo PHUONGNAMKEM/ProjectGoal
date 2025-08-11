@@ -6,6 +6,8 @@ import dayjs, { Dayjs } from "dayjs";
 import { updateGoalAPI } from "../../../services/api.me.service";
 import TextArea from "antd/es/input/TextArea";
 import RichEditor from "../../richTextEditor/RichEditor";
+import RichEditor2 from "../../richTextEditor/RichEditor2";
+import RichEditorAntd from "../../richTextEditor/RichEditorAntd";
 
 interface GoalUpdateProps {
     isModalOpen: boolean;
@@ -110,7 +112,7 @@ const GoalUpdate = ({ isModalOpen, setIsModalOpen, goal, loadGoal }: GoalUpdateP
                         >
                         </TextArea> */}
 
-                        <RichEditor
+                        <RichEditor2
                             value={description}
                             onChange={(value) => {
                                 setDescription(value)

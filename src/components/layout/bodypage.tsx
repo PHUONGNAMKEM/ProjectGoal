@@ -1,27 +1,20 @@
 import {
     AimOutlined,
-    // BookOutlined,
-    // CaretLeftOutlined,
-    // CaretRightOutlined,
-    // DesktopOutlined,
     FileDoneOutlined,
-    // FileOutlined,
-    // HomeOutlined,
     LeftOutlined,
     PieChartOutlined,
-    // RadarChartOutlined,
     RightOutlined,
     RocketOutlined,
     SettingOutlined,
-    // TeamOutlined,
-    // UsergroupDeleteOutlined,
     UserOutlined,
 } from '@ant-design/icons';
 import { Breadcrumb, Layout, Menu, theme } from 'antd';
 import { MenuProps } from 'rc-menu';
-import { useState } from 'react';
-import { Link, Outlet } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, Outlet, useParams } from 'react-router-dom';
 import './layoutStyle/bodyPageStyle.scss'
+import { getGoalByIdAPI } from '../../services/api.me.service';
+import { ArrowRight } from 'lucide-react';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
@@ -55,14 +48,14 @@ const BodyPage = () => {
             getItem('Team 2', 'p2')
         ]),
         getItem('Settings', 'settings', <SettingOutlined />),
-        getItem('Analytics', 'analytics', <PieChartOutlined />),
+        getItem(<Link to={"/analytics"}>Analytics</Link>, 'analytics', <PieChartOutlined />),
     ];
 
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
 
-    const [breadcrumbTitle, setBreadcrumbTitle] = useState<{ title: string }[]>([{ title: 'Task' }]);
+    const [breadcrumbTitle, setBreadcrumbTitle] = useState<{ title: string }[]>([{ title: 'Goal' }]);
     const breadcrumbMap: Record<string, string[]> = {
         goal: ['Goal'],
         tasks: ['Tasks'],
@@ -87,6 +80,21 @@ const BodyPage = () => {
         );
     };
 
+    const { idGoal } = useParams();
+    let [titleGoal, setTitleGoal] = useState("");
+    const getGoalById = async () => {
+        try {
+            const res = await getGoalByIdAPI(idGoal);
+            if (res.data) {
+                setTitleGoal(res.data.title)
+            }
+        } catch (error) {
+        }
+    }
+
+    useEffect(() => {
+        getGoalById();
+    }, [idGoal]);
 
     return (
         <Layout style={{ minHeight: '100vh' }}>
@@ -111,7 +119,7 @@ const BodyPage = () => {
                 <div className="demo-logo-vertical" />
                 {/* có thể gán theme được cho menu -> light/dark */}
                 <Menu
-                    defaultSelectedKeys={['tasks']}
+                    defaultSelectedKeys={['goal']}
                     theme='light'
                     mode="inline"
                     items={items}
@@ -136,8 +144,11 @@ const BodyPage = () => {
                 </Header>
                 <Content style={{ margin: '0 16px', }}>
                     <div className='content-header' style={{ display: "flex", width: "100%", alignItems: "center", justifyContent: "space-between", padding: "0 2px" }}>
-                        <Breadcrumb style={{ margin: '16px 0' }} items={breadcrumbTitle} />
-                        <p>hhehe</p>
+                        <div className='flex items-center justify-between'>
+                            <Breadcrumb style={{ margin: '16px 0' }} items={breadcrumbTitle} />
+                            <ArrowRight size={20} className='ml-2' />
+                        </div>
+                        <p>{titleGoal}</p>
                     </div>
                     {/* <div>
                         <h2 style={{ margin: "16px 0px" }}>Title of Goal</h2>
@@ -146,7 +157,13 @@ const BodyPage = () => {
                         style={{
                             padding: 24,
                             minHeight: 360,
-                            background: "rgb(247 247 247)",
+                            // background: "rgb(247 247 247)",
+                            // backgroundImage: `url('https://c4.wallpaperflare.com/wallpaper/73/811/589/mac-os-x-5k-lake-river-wallpaper-preview.jpg')`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                            backgroundRepeat: 'no-repeat',
+                            backgroundBlendMode: 'lighten',
+                            // backgroundColor: 'rgba(255, 255, 255, 0.161)',
                             borderRadius: borderRadiusLG,
                             border: "1px solid #ccc",
                             position: "relative"

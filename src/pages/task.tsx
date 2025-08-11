@@ -1,15 +1,14 @@
-import { useEffect, useState } from "react";
-import { Button, Col, Row } from "antd";
-import { createTask, fetchGoalAPI, getAllColumn, getTaskByIdGoal } from "../services/api.me.service";
+import { useEffect, useRef, useState } from "react";
+import { Col, Row } from "antd";
+import { getAllColumnAPI, getTaskByIdGoal, updateTaskColumn, updateTaskOrders } from "../services/api.me.service";
 import { TaskType } from "../types/TaskType";
-import Task from "../components/task/task.component";
 import { useParams } from "react-router-dom";
 import { ColumnTableType } from "../types/ColumnType";
 import TableColumn from "../components/table_column/table.column";
 import { closestCorners, DndContext, DragEndEvent, DragOverEvent } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";
-import { PlusCircleOutlined } from "@ant-design/icons";
-import ButtonComponent from "../components/button/ButtonComponent";
+import AddColumnTitle from "../components/add/addList";
+import TaskUpdate from "../components/task/taskUpdate/taskUpdate";
 
 const TaskPage = () => {
 
@@ -25,42 +24,40 @@ const TaskPage = () => {
     }
 
     const loadColumn = async () => {
-        const res = await getAllColumn(idGoal);
+        const res = await getAllColumnAPI(idGoal);
         if (res.data) {
             setColumnData(res.data);
         }
     }
+
     useEffect(() => {
         loadTask();
         loadColumn();
     }, [])
 
-    // const handleDragEnd = (event: DragEndEvent) => {
-    //     const { active, over } = event;
+    // Sử dụng use Ref để lưu lại giá trị của activeTask và targetColumnId và sử dụng lại trong handleDragEnd
+    // Khi người dùng drag (đang kéo) chưa thả -> lưu vào Ref: dragInfoRef
+    const dragInfoRef = useRef
+        <
+            {
+                task?: TaskType;
+                targetColumnId?: number;
+            }
+            | null
+        >(null);
 
-    //     if (!over) return;
-    //     const taskId = active.id as string;
-    //     const newStatus = over.id as TaskType['idColumn'];
-
-    //     setTaskData((prev) => prev.map((task) =>
-    //         task.idTask === Number(taskId) && task.idColumn !== newStatus ?
-    //             {
-    //                 ...task,
-    //                 idColumn: newStatus
-    //             }
-    //             :
-    //             task
-    //     ));
-    // }
-
-    const handleDragOver = (event: DragOverEvent) => {
+    const handleDragOver = async (event: DragOverEvent) => {
         const { active, over } = event;
         if (!over) return;
 
         setTaskData((tasks) => {
+            console.log(">>> check tasks: ", tasks)
             const activeIndex = tasks.findIndex((t) => t.idTask === active.id);
             const overIndex = tasks.findIndex((t) => t.idTask === over.id);
             const activeTask = tasks[activeIndex];
+            console.log(">>> check active.id: ", active.id)
+            console.log(">>> check activeIndex: ", activeIndex)
+            console.log(">>> check activeTask: ", activeTask)
 
             // Xác định cột đích: over.id có thể là id cột (column-<id>)
             let targetColumnId: number | undefined;
@@ -69,6 +66,12 @@ const TaskPage = () => {
             } else {
                 targetColumnId = tasks[overIndex]?.idColumn;
             }
+
+            // Lưu vào ref để dùng lại trong handleDragEnd
+            dragInfoRef.current = {
+                task: activeTask,
+                targetColumnId,
+            };
 
             // Nếu kéo sang cột khác thì cập nhật idColumn
             if (targetColumnId && targetColumnId !== activeTask.idColumn) {
@@ -85,123 +88,74 @@ const TaskPage = () => {
         });
     };
 
-    const handleDragEnd = (event: DragEndEvent) => {
-        const { active, over } = event;
-        if (!over || active.id === over.id) return;
+    // Hàm này không cần thiết (nó xảy ra khi người dùng thả chuột - hoàn tất kéo thả)
+    const handleDragEnd = async (event: DragEndEvent) => {
+        const { task, targetColumnId } = dragInfoRef.current || {};
+        if (!task || targetColumnId === undefined) return;
 
-        // Chỉ cần đổi thứ tự khi cùng cột
-        setTaskData((tasks) => {
-            const oldIndex = tasks.findIndex((t) => t.idTask === active.id);
-            const newIndex = tasks.findIndex((t) => t.idTask === over.id);
-            if (tasks[oldIndex] && tasks[newIndex] &&
-                tasks[oldIndex].idColumn === tasks[newIndex].idColumn) {
-                return arrayMove(tasks, oldIndex, newIndex);
-            }
-            return tasks;
-        });
+        console.log(">>> check task: ", task)
+        console.log(">>> check targetColumnId: ", targetColumnId)
+
+        // Cập nhật lại idColumn của task được kéo thả
+        await updateTaskColumn(Number(idGoal), task.idTask, targetColumnId);
+
+        // Cập nhật lại thứ tự của các task trong cùng 1 column (khi kéo thả task mới vào column đó)
+        const tasksInTargetColumn = taskData
+            .filter((t) =>
+                t.idTask === task.idTask
+                    ? true // lấy ra task mới vừa thả vô
+                    : t.idColumn === targetColumnId // giữ lại những tasks khác của column được thả vô
+            )
+            .map((task, index) => ({ idTask: task.idTask, priority: index }));
+        console.log(">>> check tasksInTargetColumn: ", tasksInTargetColumn);
+
+        await updateTaskOrders(Number(idGoal), tasksInTargetColumn);
+        dragInfoRef.current = null;
     };
 
-    // const handleDragEnd = (event: DragEndEvent) => {
-    //     const { active, over } = event;
-
-    //     if (!over || active.id === over.id) return;
-
-    //     setTaskData((items) => {
-    //         const oldIndex = items.findIndex((t) => t.idTask === active.id);
-    //         const newIndex = items.findIndex((t) => t.idTask === over.id);
-
-    //         // if (items[oldIndex].idColumn === items[newIndex].idColumn) {
-    //         //     return arrayMove(items, oldIndex, newIndex);
-    //         // }
-    //         if (items[oldIndex] && items[newIndex] && items[oldIndex].idColumn === items[newIndex].idColumn) {
-    //             return arrayMove(items, oldIndex, newIndex);
-    //         }
-    //         return items;
-    //     });
-    // }
-
-    // const handleDragOver = (event: DragOverEvent) => {
-    //     const { active, over } = event;
-    //     if (!over || active.id === over.id) return;
-
-    //     setTaskData((items) => {
-    //         const activeIndex = items.findIndex((t) => t.idTask === active.id);
-    //         const activeTask = items[activeIndex];
-
-    //         // Nếu over.id là chuỗi 'column-X', lấy số X làm id cột
-    //         let columnId: number | undefined;
-    //         if (typeof over.id === 'string' && over.id.startsWith('column-')) {
-    //             columnId = Number(over.id.split('-')[1]);
-    //         } else {
-    //             // nếu over.id là số, lấy idColumn của task đích
-    //             columnId = items.find((t) => t.idTask === over.id)?.idColumn;
-    //         }
-
-    //         if (!columnId || columnId === activeTask.idColumn) {
-    //             return items;
-    //         }
-
-    //         return items.map((t) =>
-    //             t.idTask === activeTask.idTask ? { ...t, idColumn: columnId! } : t
-    //         );
-    //     });
-    // };
-
-    // const createTaskByIdGoal = async () => {
-    //     const handleCreateGoal = async () => {
-    //         // if (!title || !description || !startDate || !endDate) {
-    //         //     notification.error({
-    //         //         message: "Missing fields",
-    //         //         description: "Please fill in all required fields.",
-    //         //     });
-    //         //     return;
-    //         // }
-
-    //         try {
-    //             const res = await createTask(
-
-    //             );
-
-    //             if (res?.data) {
-    //                 notification.success({
-    //                     message: "Goal created successfully",
-    //                 });
-    //                 resetAndCloseModal();
-    //             }
-    //         } catch (error: any) {
-    //             notification.error({
-    //                 message: "Create Goal Failed",
-    //                 description: error?.response?.data?.message || "Unknown error",
-    //             });
-    //         }
-    //     };
-    // }
+    const [isModalUpdateTaskOpen, setIsModalUpdateTaskOpen] = useState(false);
+    const [taskSelected, setTaskSelected] = useState<TaskType | null>(null);
+    const handleClickTask = (task: TaskType) => {
+        setTaskSelected(task);
+        setIsModalUpdateTaskOpen(true);
+    };
 
     return (
         <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <Row gutter={[16, 16]}>
-                <DndContext
-                    collisionDetection={closestCorners}
-                    onDragEnd={handleDragEnd}
-                    onDragOver={handleDragOver}
-                >
+            <DndContext
+                collisionDetection={closestCorners}
+                onDragEnd={handleDragEnd}
+                onDragOver={handleDragOver}
+            >
+                <Row gutter={[8, 8]} className="w-full">
                     {columnData.map((column) => (
-                        <TableColumn
-                            key={column.idColumn}
-                            column={column}
-                            tasks={taskData.filter(task => task.idColumn === column.idColumn)}
-                            loadTask={loadTask} />
+                        <Col xs={24} sm={12} md={8} lg={8} key={column.idColumn}>
+                            <TableColumn
+                                key={column.idColumn}
+                                column={column}
+                                tasks={taskData.filter(task => task.idColumn === column.idColumn)}
+                                loadTask={loadTask}
+                                loadColumn={loadColumn}
+                                handleClickTask={handleClickTask}
+                            />
+                        </Col>
                     ))}
-                </DndContext>
-            </Row>
+                </Row>
+            </DndContext>
+            <AddColumnTitle loadColumn={loadColumn} />
 
-            {/* <Button onClick={() => { }} type="primary" icon={<PlusCircleOutlined />} iconPosition="start">
-                Add
-            </Button> */}
+            <div>
+                {
+                    <TaskUpdate
+                        isModalTaskUpdateOpen={isModalUpdateTaskOpen}
+                        setIsModalTaskUpdateOpen={setIsModalUpdateTaskOpen}
+                        task={taskSelected}
+                        loadTask={loadTask}
+                    />
+                }
+            </div>
         </div>
     );
-
-
 }
 
 export default TaskPage;
