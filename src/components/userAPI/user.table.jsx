@@ -135,7 +135,6 @@ const UserTable = (props) => {
                 setPageSize(+pagination.pageSize)
             }
         }
-
     };
 
 

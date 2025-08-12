@@ -26,7 +26,7 @@ const LoginPage = () => {
             setIsLoading(false)
             localStorage.setItem("access_token", res.data.access_token)
             setUser(res.data.user)
-            navigate("/")
+            navigate("/goal")
         }
         else {
             notification.error({
