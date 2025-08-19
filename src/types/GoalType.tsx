@@ -1,3 +1,5 @@
+import { GoalLabel } from "./GoalLabel";
+
 export interface GoalType {
     idGoal: number;
     title: string;
@@ -7,7 +9,9 @@ export interface GoalType {
     status: string;
     progress: number;
     isPublic: boolean;
+    background: string;
     createdAt: string;
     updatedAt: string;
     idUser: number;
+    typeofGoals: GoalLabel[];
 }

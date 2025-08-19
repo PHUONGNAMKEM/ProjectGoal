@@ -93,7 +93,7 @@ const BodyPage = () => {
     }
 
     useEffect(() => {
-        getGoalById();
+        // getGoalById();
     }, [idGoal]);
 
     return (

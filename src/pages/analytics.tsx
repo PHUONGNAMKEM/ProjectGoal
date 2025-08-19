@@ -3,7 +3,7 @@ import { Timeline } from "antd";
 import { useEffect, useState } from "react";
 import { GoalType } from "../types/GoalType";
 import { GoalLabel } from "../types/GoalLabel";
-import { fetchGoalAPI, getTypeofGoalAPI } from "../services/api.me.service";
+import { fetchGoalAPI, getTypeofGoalByIdAPI } from "../services/api.me.service";
 import ButtonAddNewGoal from "../components/layout/buttonAddNewGoal/buttonAddNewGoal";
 import { Link } from "react-router-dom";
 
@@ -20,7 +20,7 @@ const Analytics = () => {
     }
 
     const loadTypeofGoal = async () => {
-        const res = await getTypeofGoalAPI(1);
+        const res = await getTypeofGoalByIdAPI(1);
         if (res.data) {
             setTypeofGoalData(res.data);
             console.log("Type of goal in: ", typeofGoalData);

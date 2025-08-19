@@ -7,7 +7,7 @@ import { IPrivateRouteProps } from "../interface/IPrivateRouteProps";
 const PrivateRoute = (props: IPrivateRouteProps) => {
     const { user } = useContext(AuthContext);
 
-    if (user && user.id) {
+    if (user && user.idUser) {
         return (<>
             {props.children}
         </>)

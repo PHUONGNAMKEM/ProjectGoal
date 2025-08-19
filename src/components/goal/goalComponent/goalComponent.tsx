@@ -6,10 +6,11 @@ import { Link } from "react-router-dom";
 import { GoalType } from "../../../types/GoalType";
 import dayjs from "dayjs";
 import { DashOutlined, SettingOutlined } from "@ant-design/icons";
-import { deleteGoalAPI, getTypeofGoalAPI } from "../../../services/api.me.service";
+import { deleteGoalAPI } from "../../../services/api.me.service";
 import GoalUpdate from "../goalUpdate/goalUpdate";
 import { GoalLabel } from "../../../types/GoalLabel";
 import DOMPurify from 'dompurify';
+import { generate } from "@ant-design/colors";
 
 interface GoalProps {
     goalData: GoalType;
@@ -100,6 +101,9 @@ const Goal = ({ goalData, loadGoal, typeofGoalData }: GoalProps) => {
     const [isUpdateOpen, setIsUpdateOpen] = useState(false);
     const [selectedGoal, setSelectedGoal] = useState<GoalType | null>(null);
 
+    // Theme of Table: TypeofGoal
+    // const typeThemeGoal = typeofGoalData.find(type => type.idGoal === goalData.idGoal);
+
     useEffect(() => {
 
     }, [goalData])
@@ -110,15 +114,14 @@ const Goal = ({ goalData, loadGoal, typeofGoalData }: GoalProps) => {
                 flex: 1,
                 display: "flex",
                 flexDirection: "column",
-                justifyContent: "space-around",
+                justifyContent: "space-evenly",
             }}>
-                <div className="goal-card-content-top" style={{ display: "flex", justifyContent: "space-between", }}>
+                <div className="goal-card-content-top h-[48px]" style={{ display: "flex", justifyContent: "space-between", }}>
                     <Link to={`/goal/${goalData.idGoal}/tasks/`} className="goal-card-title"
                         style={{
                             fontSize: "20px",
                             lineHeight: "24px",
                             fontWeight: "500",
-                            marginBottom: "6px",
                             color: "rgba(70, 69, 60, 1)",
                             display: "-webkit-box",
                             WebkitLineClamp: 2,
@@ -162,22 +165,49 @@ const Goal = ({ goalData, loadGoal, typeofGoalData }: GoalProps) => {
                         textOverflow: "ellipsis",
                         lineHeight: '1.5em',
                         maxHeight: '3em',
+                        height: "42px",
+                        marginBottom: "8px"
                     }}
                     // dangerouslySetInnerHTML={{ __html: goalData.description }}
                     dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(goalData.description) }}
                 />
 
 
-                <Flex gap="4px 0" wrap style={{ marginBottom: "14px" }}>
+                {/* <Flex gap="4px 0" wrap style={{ marginBottom: "6px" }}>
                     <Tag color="red">red</Tag>
                     <Tag color="gold">gold</Tag>
                     <Tag color="green">green</Tag>
                     <Tag color="cyan">cyan</Tag>
                     <Tag color="blue">blue</Tag>
                     <Tag color="purple">purple</Tag>
-                </Flex>
+                </Flex> */}
 
-                <div>{typeofGoalData.find(type => type.idGoal === goalData.idGoal)?.nameType || <div>No type</div>}</div>
+                {/* border-[#91caff]
+                bg-[#e6f4ff] */}
+
+                <Flex gap="4px 0" wrap style={{ marginBottom: "14px" }}>
+                    {typeofGoalData && typeofGoalData.length > 0 ? (
+                        typeofGoalData.map(type => {
+                            return (
+                                <div
+                                    className="
+                                    p-1 text-sm rounded border
+                                    [color:var(--primary)]
+                                    [border-color:color-mix(in_srgb,var(--primary)_90%,10%_black)]   
+                                    [background-color:color-mix(in_srgb,var(--primary)_10%,white)]
+                                "
+                                    style={{ "--primary": type?.theme } as React.CSSProperties}
+                                >
+
+                                    {
+                                        type?.nameType
+                                    }
+                                </div>
+                            );
+                        })
+                    ) : <div className="p-1 text-sm rounded border text-[#0958d9] border-[#91caff] bg-[#e6f4ff]">No type</div>
+                    }
+                </Flex>
 
                 <Flex gap="4px 0" wrap style={{ marginBottom: "14px" }}>
                     <Progress percent={goalData.progress} percentPosition={{ align: 'start', type: 'outer' }} />

@@ -7,7 +7,6 @@ import { createBookAPI, handleUploadFile } from "../../services/api.service";
 
 const CreateBookUncontrolled = (props) => {
 
-
     const [form] = Form.useForm();
     const [isLoading, setIsLoading] = useState();
     const { setUser } = useContext(AuthContext);
@@ -18,7 +17,6 @@ const CreateBookUncontrolled = (props) => {
     const [preview, setPreview] = useState(null) // luu tru url
     const onFinish = async (value) => {
         if (!thumbnail) {
-            f
             notification.error({
                 message: "Error upload file",
                 description: "Please upload image for this book!"
@@ -45,7 +43,7 @@ const CreateBookUncontrolled = (props) => {
         if (resCreate.data) {
             message.success("Create book")
         }
-        resetAndCloseModal()
+        resetAndCloseModal();
     }
 
     const handleOnchangeFile = (event) => {

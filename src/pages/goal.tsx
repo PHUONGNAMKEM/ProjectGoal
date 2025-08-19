@@ -2,7 +2,7 @@
 import { Button, Col, notification, Row } from "antd";
 import Goal from "../components/goal/goalComponent/goalComponent";
 import { useContext, useEffect, useState } from "react";
-import { createGoalAPI, fetchGoalAPI, getTypeofGoalAPI } from "../services/api.me.service";
+import { createGoalAPI, fetchGoalAPI, getAllTypeofGoal, getTypeofGoalByIdAPI } from "../services/api.me.service";
 import { GoalType } from "../types/GoalType";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
@@ -15,9 +15,7 @@ import { AuthContext } from "../components/context/auth.context";
 const GoalPage = () => {
 
     const [goalData, setGoalData] = useState<GoalType[]>([]);
-    const [typeofGoalData, setTypeofGoalData] = useState<GoalLabel[]>([]);
-
-    const { user } = useContext(AuthContext);
+    // const [typeofGoalData, setTypeofGoalData] = useState<GoalLabel[]>([]);
 
     const loadGoal = async () => {
         const res = await fetchGoalAPI();
@@ -27,18 +25,20 @@ const GoalPage = () => {
         console.log(">>> check goal", res)
     }
 
-    const loadTypeofGoal = async () => {
-        const res = await getTypeofGoalAPI(1);
-        if (res.data) {
-            setTypeofGoalData(res.data);
-            console.log("Type of goal in: ", typeofGoalData);
-        }
-    }
+    // const loadTypeofGoal = async () => {
+    //     const res = await getAllTypeofGoal();
+    //     if (res.data) {
+    //         setTypeofGoalData(res.data);
+    //         console.log("Type of goal in: ", typeofGoalData);
+    //     }
+    // }
 
     useEffect(() => {
         loadGoal();
-        loadTypeofGoal();
+        // loadTypeofGoal();
     }, [])
+
+    console.log(">>> check goal data: ", goalData);
 
     return (
         <>
@@ -51,7 +51,7 @@ const GoalPage = () => {
             <Row gutter={[16, 16]}>
                 {goalData.map((goal) => (
                     <Col xs={24} sm={12} md={8} lg={6} key={goal.idGoal}>
-                        <Goal goalData={goal} loadGoal={loadGoal} typeofGoalData={typeofGoalData} />
+                        <Goal goalData={goal} loadGoal={loadGoal} typeofGoalData={goal.typeofGoals} />
                     </Col>
                 ))}
             </Row>

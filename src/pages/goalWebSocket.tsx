@@ -43,7 +43,7 @@ const GoalPage = () => {
             {/* <Col xs={24} sm={12} md={8} lg={6}><Goal goalData={goalData} /></Col> */}
             {goalData.map((goal) => (
                 <Col xs={24} sm={12} md={8} lg={6} key={goal.idGoal}>
-                    <Goal goalData={goal} loadGoal={loadGoal} />
+                    {/* <Goal goalData={goal} loadGoal={loadGoal} /> */}
                 </Col>
             ))}
 
