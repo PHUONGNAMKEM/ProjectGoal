@@ -132,7 +132,7 @@ const GoalAdd = ({ goalData, isModalOpen, setIsModalOpen, loadGoal }: GoalAddPro
     );
 
     return (
-        <div className="user-form" style={{ margin: "10px 0", }}>
+        <div className="user-form">
             <Modal
                 title="Create Goal"
                 closable={{ 'aria-label': 'Custom Close Button' }}

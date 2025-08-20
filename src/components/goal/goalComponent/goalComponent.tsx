@@ -10,7 +10,8 @@ import { deleteGoalAPI } from "../../../services/api.me.service";
 import GoalUpdate from "../goalUpdate/goalUpdate";
 import { GoalLabel } from "../../../types/GoalLabel";
 import DOMPurify from 'dompurify';
-import { generate } from "@ant-design/colors";
+import TypeOfGoal from "../typeofGoal/typeofGoal";
+import ButtonAddNewTypeofGoal from "../typeofGoal/buttonAddNewTypeofGoal";
 
 interface GoalProps {
     goalData: GoalType;
@@ -116,7 +117,7 @@ const Goal = ({ goalData, loadGoal, typeofGoalData }: GoalProps) => {
                 flexDirection: "column",
                 justifyContent: "space-evenly",
             }}>
-                <div className="goal-card-content-top h-[48px]" style={{ display: "flex", justifyContent: "space-between", }}>
+                <div className="goal-card-content-top h-[48px]" style={{ display: "flex", justifyContent: "space-between" }}>
                     <Link to={`/goal/${goalData.idGoal}/tasks/`} className="goal-card-title"
                         style={{
                             fontSize: "20px",
@@ -182,23 +183,35 @@ const Goal = ({ goalData, loadGoal, typeofGoalData }: GoalProps) => {
                     <Tag color="purple">purple</Tag>
                 </Flex> */}
 
-                {/* border-[#91caff]
-                bg-[#e6f4ff] */}
 
-                <Flex gap="4px 0" wrap style={{ marginBottom: "14px" }}>
+                {/* <Flex gap="4px 0" wrap style={{ marginBottom: "14px" }}>
                     {typeofGoalData && typeofGoalData.length > 0 ? (
-                        typeofGoalData.map(type => {
+                        typeofGoalData.slice(0, 4).map(type => {
+                            const palette = generate(type?.theme || '#0958d9');
                             return (
+                                // Way 1
+                                // <div className="p-1 text-sm border rounded"
+                                //     style={{
+                                //         color: palette[5],
+                                //         borderColor: palette[3],
+                                //         backgroundColor: palette[1],
+                                //     }}
+
+                                // Way 2
                                 <div
                                     className="
-                                    p-1 text-sm rounded border
-                                    [color:var(--primary)]
-                                    [border-color:color-mix(in_srgb,var(--primary)_90%,10%_black)]   
-                                    [background-color:color-mix(in_srgb,var(--primary)_10%,white)]
-                                "
-                                    style={{ "--primary": type?.theme } as React.CSSProperties}
+                                        px-2 py-0.5 text-sm rounded border
+                                        [color:var(--primary)]
+                                        [border-color:color-mix(in_oklch,var(--primary)_35%,white)]
+                                        [background-color:color-mix(in_oklch,var(--primary)_12%,white)]
+                                    "
+                                    style={
+                                        {
+                                            '--primary': type?.theme || '#1677ff',
+                                            fontWeight: 400,
+                                        } as React.CSSProperties
+                                    }
                                 >
-
                                     {
                                         type?.nameType
                                     }
@@ -207,7 +220,18 @@ const Goal = ({ goalData, loadGoal, typeofGoalData }: GoalProps) => {
                         })
                     ) : <div className="p-1 text-sm rounded border text-[#0958d9] border-[#91caff] bg-[#e6f4ff]">No type</div>
                     }
-                </Flex>
+                </Flex> */}
+
+                <TypeOfGoal
+                    maxItem={4}
+                    typeofGoalData={typeofGoalData}
+                />
+
+                <ButtonAddNewTypeofGoal
+                    idGoal={goalData.idGoal}
+                    goalData={goalData}
+                    loadGoal={loadGoal}
+                />
 
                 <Flex gap="4px 0" wrap style={{ marginBottom: "14px" }}>
                     <Progress percent={goalData.progress} percentPosition={{ align: 'start', type: 'outer' }} />
@@ -262,6 +286,7 @@ const Goal = ({ goalData, loadGoal, typeofGoalData }: GoalProps) => {
                         setIsModalOpen={setIsUpdateOpen}
                         goal={selectedGoal}
                         loadGoal={loadGoal}
+                        typeofGoalData={typeofGoalData}
                     />
                 )
             }
