@@ -1,8 +1,8 @@
 import { CircleFadingPlus } from "lucide-react";
-import { createTypeofGoalAPI } from "../../../services/api.me.service";
+import { createTypeofGoalAPI } from "../../../../services/api.me.service";
 import { useState } from "react";
 import TypeofGoalAdd from "./typeofGoalAdd";
-import { GoalType } from "../../../types/GoalType";
+import { GoalType } from "../../../../types/GoalType";
 
 
 interface ButtonAddNewTypeofGoalProps {

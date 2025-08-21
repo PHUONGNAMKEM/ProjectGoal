@@ -158,7 +158,6 @@ const Task = ({ taskData, loadTask, onClick }: TaskProps) => {
                     <UndoOutlined style={{ marginLeft: "8px", position: "relative", fontSize: 16, color: "rgb(94, 94, 94)", cursor: "pointer" }} onClick={onRollBackStatus} />
                 </div>
             </div>
-
         </>
     );
 }

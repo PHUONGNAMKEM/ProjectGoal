@@ -1,4 +1,4 @@
-import { DatePicker, Flex, GetProp, Image, Input, Modal, notification, Radio, Upload, UploadFile, } from "antd";
+import { Col, DatePicker, Flex, GetProp, Image, Input, Modal, notification, Radio, Row, Upload, UploadFile, } from "antd";
 import { useEffect, useState } from "react";
 import './goalUpdate.scss';
 import { GoalType } from "../../../types/GoalType";
@@ -137,7 +137,11 @@ const GoalUpdate = ({ isModalOpen, setIsModalOpen, goal, loadGoal, typeofGoalDat
                 maskClosable={false}
                 okText={"UPDATE"}
             >
-                <div style={{ display: "flex", gap: "15px", flexDirection: "column" }}>
+                <div
+                    style={{
+                        display: "flex", gap: "15px", flexDirection: "column"
+                    }}
+                >
                     <div>
                         <span>Title</span>
                         <Input
@@ -146,14 +150,6 @@ const GoalUpdate = ({ isModalOpen, setIsModalOpen, goal, loadGoal, typeofGoalDat
                     </div>
                     <div>
                         <span>Description</span>
-                        {/* <TextArea
-                            placeholder="Describe for your Stunning Goal"
-                            autoSize={{ minRows: 2, maxRows: 6 }}
-                            value={description}
-                            onChange={(e) => setDescription(e.target.value)}
-                        >
-                        </TextArea> */}
-
                         <RichEditor2
                             value={description}
                             onChange={(value) => {
@@ -174,7 +170,6 @@ const GoalUpdate = ({ isModalOpen, setIsModalOpen, goal, loadGoal, typeofGoalDat
                             </Radio.Group>
                         </div>
                     </div>
-
                     <div>
                         <img
                             style={{
@@ -206,39 +201,23 @@ const GoalUpdate = ({ isModalOpen, setIsModalOpen, goal, loadGoal, typeofGoalDat
                             />
                         )}
                     </div>
-
-                    {/* <Flex gap="4px 0" wrap style={{ marginBottom: "14px" }}>
-                        {typeofGoalData && typeofGoalData.length > 0 ? (
-                            typeofGoalData.slice(0, 4).map(type => {
-                                return (
-                                    <div
-                                        className="
-                                                px-2 py-0.5 text-sm rounded border
-                                                [color:var(--primary)]
-                                                [border-color:color-mix(in_oklch,var(--primary)_35%,white)]
-                                                [background-color:color-mix(in_oklch,var(--primary)_12%,white)]
-                                            "
-                                        style={
-                                            {
-                                                '--primary': type?.theme || '#1677ff',
-                                                fontWeight: 400,
-                                            } as React.CSSProperties
-                                        }
-                                    >
-                                        {
-                                            type?.nameType
-                                        }
-                                    </div>
-                                );
-                            })
-                        ) : <div className="p-1 text-sm rounded border text-[#0958d9] border-[#91caff] bg-[#e6f4ff]">No type</div>
-                        }
-                    </Flex> */}
                     <TypeOfGoal
                         idGoal={goal.idGoal}
                         typeofGoalData={typeofGoalData}
+                        goal={goal}
+                        loadGoal={loadGoal}
                     />
                 </div>
+
+
+                {/* <Row gutter={16}>
+                    <Col className="gutter-row" span={6}>
+                        <div style={{}}>col-6</div>
+                    </Col>
+                    <Col className="gutter-row" span={6}>
+                        <div style={{}}>col-6</div>
+                    </Col>
+                </Row> */}
             </Modal>
         </div>
     )

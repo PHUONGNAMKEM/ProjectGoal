@@ -11,7 +11,7 @@ import GoalUpdate from "../goalUpdate/goalUpdate";
 import { GoalLabel } from "../../../types/GoalLabel";
 import DOMPurify from 'dompurify';
 import TypeOfGoal from "../typeofGoal/typeofGoal";
-import ButtonAddNewTypeofGoal from "../typeofGoal/buttonAddNewTypeofGoal";
+import ButtonAddNewTypeofGoal from "../typeofGoal/typeofGoalAdd/buttonAddNewTypeofGoal";
 
 interface GoalProps {
     goalData: GoalType;
@@ -222,16 +222,23 @@ const Goal = ({ goalData, loadGoal, typeofGoalData }: GoalProps) => {
                     }
                 </Flex> */}
 
-                <TypeOfGoal
-                    maxItem={4}
-                    typeofGoalData={typeofGoalData}
-                />
+                <div className="flex items-center mb-3.5">
 
-                <ButtonAddNewTypeofGoal
-                    idGoal={goalData.idGoal}
-                    goalData={goalData}
-                    loadGoal={loadGoal}
-                />
+                    <TypeOfGoal
+                        maxItem={4}
+                        typeofGoalData={typeofGoalData}
+                        goal={goalData}
+                        loadGoal={loadGoal}
+                    />
+
+                    <div className="text-xl">
+                        <ButtonAddNewTypeofGoal
+                            idGoal={goalData.idGoal}
+                            goalData={goalData}
+                            loadGoal={loadGoal}
+                        />
+                    </div>
+                </div>
 
                 <Flex gap="4px 0" wrap style={{ marginBottom: "14px" }}>
                     <Progress percent={goalData.progress} percentPosition={{ align: 'start', type: 'outer' }} />

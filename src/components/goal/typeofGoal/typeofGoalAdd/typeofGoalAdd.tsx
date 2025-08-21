@@ -2,10 +2,10 @@ import { Button, ColorPicker, DatePicker, Dropdown, Flex, GetProp, Image, Input,
 import { useEffect, useState } from "react";
 import { HiOutlineBookmark } from "react-icons/hi";
 import { Link } from "react-router-dom";
-import { GoalType } from "../../../types/GoalType";
+import { GoalType } from "../../../../types/GoalType";
 import dayjs, { Dayjs, extend } from "dayjs";
 import { DashOutlined, PlusOutlined, SettingOutlined } from "@ant-design/icons";
-import { createGoalAPI, createTypeofGoalAPI, deleteGoalAPI } from "../../../services/api.me.service";
+import { createGoalAPI, createTypeofGoalAPI, deleteGoalAPI } from "../../../../services/api.me.service";
 import TextArea from "antd/es/input/TextArea";
 import { RcFile } from "antd/es/upload";
 import { AxiosResponse } from "axios";

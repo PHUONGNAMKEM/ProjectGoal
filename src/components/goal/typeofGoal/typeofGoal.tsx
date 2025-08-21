@@ -3,21 +3,25 @@ import { GoalLabel } from "../../../types/GoalLabel";
 import { generate } from "@ant-design/colors";
 import { CircleFadingPlus, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
-import ButtonAddNewTypeofGoal from "./buttonAddNewTypeofGoal";
+import ButtonAddNewTypeofGoal from "./typeofGoalAdd/buttonAddNewTypeofGoal";
+import TypeofGoalUpdate from "./typeofGoalUpdate/typeofGoalUpdate";
+import { GoalType } from "../../../types/GoalType";
 
 interface TypeOfGoalProps {
     idGoal?: number;
     maxItem?: number;
     typeofGoalData: GoalLabel[];
+    goal: GoalType;
+    loadGoal: () => void;
 }
 
-const TypeOfGoal = ({ idGoal, typeofGoalData, maxItem = typeofGoalData.length }: TypeOfGoalProps) => {
+const TypeOfGoal = ({ idGoal, typeofGoalData, maxItem = typeofGoalData.length, goal, loadGoal }: TypeOfGoalProps) => {
     let amountTypeofGoal = typeofGoalData.length;
+    const [isModalTypeofGoalUpdateOpen, setIsModalTypeofGoalUpdateOpen] = useState(false);
 
     return (
         <Flex gap="4px 0" wrap align="center"
             style={{
-                marginBottom: "14px",
                 height: "56px",
             }}>
             {typeofGoalData && typeofGoalData.length > 0 ? (
@@ -35,9 +39,10 @@ const TypeOfGoal = ({ idGoal, typeofGoalData, maxItem = typeofGoalData.length }:
 
                         // Way 2
                         <div
+                            onClick={() => setIsModalTypeofGoalUpdateOpen(true)}
                             key={type.idTypeGoal}
                             className="
-                                        px-2 py-0.5 text-sm rounded border
+                                        px-2 py-0.5 text-sm rounded border cursor-pointer
                                         [color:var(--primary)]
                                         [border-color:color-mix(in_oklch,var(--primary)_35%,white)]
                                         [background-color:color-mix(in_oklch,var(--primary)_12%,white)]
@@ -66,6 +71,17 @@ const TypeOfGoal = ({ idGoal, typeofGoalData, maxItem = typeofGoalData.length }:
                     :
                     <></>
             }
+
+            {/*Modal Update and Delete TypeofGoal*/}
+            <div>
+                <TypeofGoalUpdate
+                    isModalTypeofGoalUpdateOpen={isModalTypeofGoalUpdateOpen}
+                    setIsModalTypeofGoalUpdateOpen={setIsModalTypeofGoalUpdateOpen}
+                    typeofGoalData={typeofGoalData}
+                    goal={goal}
+                    loadGoal={loadGoal}
+                />
+            </div>
         </Flex>
     );
 }

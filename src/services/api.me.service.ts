@@ -294,6 +294,20 @@ const createTypeofGoalAPI = (nameType: string, theme: string, idGoal: number) =>
     return axios.post(URL_BACKEND, data);
 }
 
+const updateTypeofGoalAPI = (nameType: string | undefined, theme: string | undefined, idTypeGoal: number) => {
+    const URL_BACKEND = `api/type-of-goal/${idTypeGoal}`;
+    const data = {
+        nameType,
+        theme
+    }
+    return axios.put(URL_BACKEND, data);
+}
+
+const deleteTypeofGoalAPI = (idTypeGoal: number) => {
+    const URL_BACKEND = `api/type-of-goal/${idTypeGoal}`;
+    return axios.delete(URL_BACKEND);
+}
+
 export {
     createUserAPI, updateUserAPI, fetchUserAPI, deleteUserAPI,
     registerUserAPI,
@@ -301,5 +315,5 @@ export {
     updateGoalAPI, getTypeofGoalByIdAPI, getTaskByIdGoal, changeStatusTask, getAllColumnAPI,
     createColumnAPI, deleteColumnAPI, createTaskAPI, updateTaskColumn, updateTaskOrders,
     updateTitleColumnAPI, updateTitleTaskAPI, deleteTaskAPI, getGoalByIdAPI, getAllTypeofGoal,
-    createTypeofGoalAPI
+    createTypeofGoalAPI, updateTypeofGoalAPI, deleteTypeofGoalAPI
 }
