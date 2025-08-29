@@ -1,8 +1,10 @@
 $border-color: var(--color-hex);
+
 @mixin size($width, $height: $width) {
   width: $width;
   height: $height;
 }
+
 .goal-card {
   border: 1px solid var(--color-hex);
   background-color: #fff;
@@ -26,4 +28,10 @@ $border-color: var(--color-hex);
     cursor: pointer;
   }
 
+}
+
+:where(.css-dev-only-do-not-override-zg0ahe).ant-upload-wrapper.ant-upload-picture-card-wrapper .ant-upload.ant-upload-select {
+  width: 70px;
+  height: 70px;
+  margin: 10px 0;
 }

@@ -51,6 +51,10 @@ const AddNewTask = ({ column, loadTask }: AddColumnTitleProps) => {
                 setIsAdding(false);
                 await loadTask();
             }
+            else {
+                // throw new Error(res.message);
+                throw new Error();
+            }
         } catch (error) {
             notification.error({
                 message: "Failed",

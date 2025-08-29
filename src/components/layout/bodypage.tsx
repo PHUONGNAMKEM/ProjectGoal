@@ -15,10 +15,14 @@ import { Link, Outlet, useParams } from 'react-router-dom';
 import './layoutStyle/bodyPageStyle.scss'
 import { getGoalByIdAPI } from '../../services/api.me.service';
 import { ArrowRight } from 'lucide-react';
+import ThemeToggle from '../theme/ThemeToggle';
+import { useTheme } from '@components/context/ThemeContext';
 
 type MenuItem = Required<MenuProps>['items'][number];
 
 const BodyPage = () => {
+    const { theme: appTheme } = useTheme();
+
     const { Header, Content, Sider } = Layout;
     function getItem(
         label: React.ReactNode,
@@ -98,13 +102,16 @@ const BodyPage = () => {
 
     return (
         <Layout style={{ minHeight: '100vh' }}>
-            <Sider collapsible collapsed={collapsed} onCollapse={value => setCollapsed(value)} style={{
-                background: '#fff'
-            }}
+            <Sider collapsible collapsed={collapsed} onCollapse={value => setCollapsed(value)}
+                style={{
+                    background: "var(--background-sider)",
+                    borderRight: "1px solid #ccc"
+                }}
                 trigger={
                     <div
                         style={{
-                            backgroundColor: 'var(--theme-current)',
+                            // backgroundColor: 'var(--theme-current)',
+                            backgroundColor: 'var(--button-toggle-sider)',
                             color: 'rgb(169, 168, 168)',
                             height: 48,
                             lineHeight: '48px',
@@ -120,7 +127,7 @@ const BodyPage = () => {
                 {/* có thể gán theme được cho menu -> light/dark */}
                 <Menu
                     defaultSelectedKeys={['goal']}
-                    theme='light'
+                    theme={appTheme}
                     mode="inline"
                     items={items}
                     onClick={(info: { key: string }) => {
@@ -135,26 +142,38 @@ const BodyPage = () => {
                 />
             </Sider>
             <Layout style={{ background: "var(--theme-current)" }}>
-                <Header style={{ padding: 0, background: colorBgContainer }}>
-                    <div className="themeColor">
-                        <button onClick={() => switchTheme('secondary')} className="changeThemeColor secondary-theme"></button>
-                        <button onClick={() => switchTheme('primary')} className="changeThemeColor primary-theme"></button>
-                        <button onClick={() => switchTheme('third')} className="changeThemeColor third-theme"></button>
-                    </div>
-                </Header>
-                <Content style={{ margin: '0 16px', }}>
-                    <div className='content-header' style={{ display: "flex", width: "100%", alignItems: "center", justifyContent: "space-between", padding: "0 2px" }}>
-                        <div className='flex items-center justify-between'>
-                            <Breadcrumb style={{ margin: '16px 0' }} items={breadcrumbTitle} />
-                            <ArrowRight size={20} className='ml-2' />
+                {/* <Header
+                    // className='border-b border-b-[var(--border-default)]'
+                    style={{
+                        padding: 0,
+                        // background: colorBgContainer
+                        backgroundColor: 'var(--background-header-layout)'
+                    }}
+                >
+                </Header> */}
+                <Content style={{ backgroundColor: "var(--background-content)" }}>
+                    <div className='content-header' style={{ width: "100%", alignItems: "center", justifyContent: "space-between", padding: "0 2px", backgroundColor: "var(--background-content)", }}>
+                        <div className='flex items-center justify-between mx-4 my-0 h-[100px]'>
+                            <div className='flex items-center text-[var(--text-color)]'>
+                                <Breadcrumb style={{ margin: '16px 0' }} items={breadcrumbTitle} className='!text-[var(--text-color)]' />
+                                <ArrowRight size={20} className='ml-2' />
+                            </div>
+                            <div className="themeColor ">
+                                <button onClick={() => switchTheme('secondary')} className="changeThemeColor secondary-theme"></button>
+                                <button onClick={() => switchTheme('primary')} className="changeThemeColor primary-theme"></button>
+                                <button onClick={() => switchTheme('third')} className="changeThemeColor third-theme"></button>
+                                <ThemeToggle />
+                            </div>
                         </div>
                         <p>{titleGoal}</p>
+
                     </div>
                     {/* <div>
                         <h2 style={{ margin: "16px 0px" }}>Title of Goal</h2>
                     </div> */}
                     <div
                         style={{
+                            margin: "0 16px",
                             padding: 24,
                             minHeight: 360,
                             // background: "rgb(247 247 247)",

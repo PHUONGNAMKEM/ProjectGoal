@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { HiOutlineBookmark } from "react-icons/hi";
 import './goalAdd.scss';
 import { Link } from "react-router-dom";
-import { GoalType } from "../../../types/GoalType";
+import { GoalType } from "../../../types/Goal/GoalType";
 import dayjs, { Dayjs, extend } from "dayjs";
 import { DashOutlined, PlusOutlined, SettingOutlined } from "@ant-design/icons";
 import { createGoalAPI, deleteGoalAPI } from "../../../services/api.me.service";

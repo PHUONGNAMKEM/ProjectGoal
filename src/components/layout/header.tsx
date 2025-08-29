@@ -14,11 +14,15 @@ import { useLocation } from "react-router-dom";
 import { AuthContext } from "../context/auth.context";
 import { logoutAPI } from "../../services/api.me.service";
 import { Rank, Role } from "../../types/UserType";
+import "./layoutStyle/header.scss"
+import { useTheme } from "@components/context/ThemeContext";
 
 const Header = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const { user, setUser } = useContext(AuthContext);
+    const { theme } = useTheme();
+
 
     // Lấy path hiện tại từ URL, ví dụ: "/users"
     const path = location.pathname;
@@ -59,16 +63,16 @@ const Header = () => {
             key: '/',
             icon: <HomeOutlined />,
         },
-        {
-            label: <Link to={"/users"}>User</Link>,
-            key: 'users',
-            icon: <UsergroupDeleteOutlined />,
-        },
-        {
-            label: <Link to={"/books"}>Books</Link>,
-            key: 'books',
-            icon: <BookOutlined />
-        },
+        // {
+        //     label: <Link to={"/users"}>User</Link>,
+        //     key: 'users',
+        //     icon: <UsergroupDeleteOutlined />,
+        // },
+        // {
+        //     label: <Link to={"/books"}>Books</Link>,
+        //     key: 'books',
+        //     icon: <BookOutlined />
+        // },
 
         ...(!user ? [
             {
@@ -94,7 +98,8 @@ const Header = () => {
     ];
     return (
 
-        <div style={{ display: 'flex', justifyContent: 'flex-end', borderBottom: "1px solid rgba(5, 5, 5, 0.06)" }}>
+        <div className="bg-[var(--background-header)] border-b border-b-[var(--border-default)]"
+            style={{ display: 'flex', justifyContent: 'flex-end', }}>
             {/* <ul> */}
             <Menu
                 style={{ borderBottom: "none" }}
@@ -102,6 +107,8 @@ const Header = () => {
                 selectedKeys={[path]} // đổi lại ko dùng current nữa
                 mode="horizontal"
                 items={items}
+                theme={theme}
+            // className="!bg-[var(--background-header)]"
             />
             {/* </ul> */}
         </div>

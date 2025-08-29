@@ -3,23 +3,26 @@ import { useEffect, useState } from "react";
 import { HiOutlineBookmark } from "react-icons/hi";
 import './goalComponent.scss';
 import { Link } from "react-router-dom";
-import { GoalType } from "../../../types/GoalType";
+import { GoalType } from "../../../types/Goal/GoalType";
 import dayjs from "dayjs";
 import { DashOutlined, SettingOutlined } from "@ant-design/icons";
 import { deleteGoalAPI } from "../../../services/api.me.service";
 import GoalUpdate from "../goalUpdate/goalUpdate";
-import { GoalLabel } from "../../../types/GoalLabel";
 import DOMPurify from 'dompurify';
 import TypeOfGoal from "../typeofGoal/typeofGoal";
 import ButtonAddNewTypeofGoal from "../typeofGoal/typeofGoalAdd/buttonAddNewTypeofGoal";
+import { TypeofGoal } from "../../../types/Goal/TypeofGoal";
+import { Ellipsis } from "lucide-react";
 
 interface GoalProps {
     goalData: GoalType;
     loadGoal: () => void;
-    typeofGoalData: GoalLabel[];
+    typeofGoalData: TypeofGoal[]; // type of Goal by Goal id
+    allTypeofGoalData: TypeofGoal[]; // all typeofGoal
+    loadTypeofGoal: () => void;
 }
 
-const Goal = ({ goalData, loadGoal, typeofGoalData }: GoalProps) => {
+const Goal = ({ goalData, loadGoal, typeofGoalData, allTypeofGoalData, loadTypeofGoal }: GoalProps) => {
 
     const [colorHex, setColorHex] = useState('#1677ff');
     const [bookMark, setBookMark] = useState(false);
@@ -133,7 +136,7 @@ const Goal = ({ goalData, loadGoal, typeofGoalData }: GoalProps) => {
                     <Dropdown menu={{ items }} placement="topRight">
                         <a onClick={(e) => e.preventDefault()}>
                             <Space>
-                                <DashOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
+                                <Ellipsis style={{ fontSize: "20px", cursor: "pointer" }} />
                             </Space>
                         </a>
                     </Dropdown>
@@ -173,55 +176,6 @@ const Goal = ({ goalData, loadGoal, typeofGoalData }: GoalProps) => {
                     dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(goalData.description) }}
                 />
 
-
-                {/* <Flex gap="4px 0" wrap style={{ marginBottom: "6px" }}>
-                    <Tag color="red">red</Tag>
-                    <Tag color="gold">gold</Tag>
-                    <Tag color="green">green</Tag>
-                    <Tag color="cyan">cyan</Tag>
-                    <Tag color="blue">blue</Tag>
-                    <Tag color="purple">purple</Tag>
-                </Flex> */}
-
-
-                {/* <Flex gap="4px 0" wrap style={{ marginBottom: "14px" }}>
-                    {typeofGoalData && typeofGoalData.length > 0 ? (
-                        typeofGoalData.slice(0, 4).map(type => {
-                            const palette = generate(type?.theme || '#0958d9');
-                            return (
-                                // Way 1
-                                // <div className="p-1 text-sm border rounded"
-                                //     style={{
-                                //         color: palette[5],
-                                //         borderColor: palette[3],
-                                //         backgroundColor: palette[1],
-                                //     }}
-
-                                // Way 2
-                                <div
-                                    className="
-                                        px-2 py-0.5 text-sm rounded border
-                                        [color:var(--primary)]
-                                        [border-color:color-mix(in_oklch,var(--primary)_35%,white)]
-                                        [background-color:color-mix(in_oklch,var(--primary)_12%,white)]
-                                    "
-                                    style={
-                                        {
-                                            '--primary': type?.theme || '#1677ff',
-                                            fontWeight: 400,
-                                        } as React.CSSProperties
-                                    }
-                                >
-                                    {
-                                        type?.nameType
-                                    }
-                                </div>
-                            );
-                        })
-                    ) : <div className="p-1 text-sm rounded border text-[#0958d9] border-[#91caff] bg-[#e6f4ff]">No type</div>
-                    }
-                </Flex> */}
-
                 <div className="flex items-center mb-3.5">
 
                     <TypeOfGoal
@@ -229,15 +183,18 @@ const Goal = ({ goalData, loadGoal, typeofGoalData }: GoalProps) => {
                         typeofGoalData={typeofGoalData}
                         goal={goalData}
                         loadGoal={loadGoal}
+                        idGoal={goalData.idGoal}
+                        allTypeofGoalData={allTypeofGoalData}
+                        loadTypeofGoal={loadTypeofGoal}
                     />
 
-                    <div className="text-xl">
+                    {/* <div className="text-xl">
                         <ButtonAddNewTypeofGoal
                             idGoal={goalData.idGoal}
                             goalData={goalData}
                             loadGoal={loadGoal}
                         />
-                    </div>
+                    </div> */}
                 </div>
 
                 <Flex gap="4px 0" wrap style={{ marginBottom: "14px" }}>
@@ -294,6 +251,8 @@ const Goal = ({ goalData, loadGoal, typeofGoalData }: GoalProps) => {
                         goal={selectedGoal}
                         loadGoal={loadGoal}
                         typeofGoalData={typeofGoalData}
+                        allTypeofGoalData={allTypeofGoalData}
+                        loadTypeofGoal={loadTypeofGoal}
                     />
                 )
             }

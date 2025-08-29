@@ -1,4 +1,7 @@
-@import "tailwindcss";
+// @import "tailwindcss";
+/* @import "variable.scss"; */
+@use "tailwindcss";
+@use "./variable.scss";
 
 html,
 body {

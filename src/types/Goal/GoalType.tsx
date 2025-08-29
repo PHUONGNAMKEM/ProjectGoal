@@ -1,4 +1,4 @@
-import { GoalLabel } from "./GoalLabel";
+import { GoalTypeBetween } from "./GoalTypeBetween";
 
 export interface GoalType {
     idGoal: number;
@@ -13,5 +13,5 @@ export interface GoalType {
     createdAt: string;
     updatedAt: string;
     idUser: number;
-    typeofGoals: GoalLabel[];
+    goalTypes: GoalTypeBetween[];
 }

@@ -1,5 +1,5 @@
 import { Button } from "antd";
-import { GoalType } from "../../../types/GoalType"
+import { GoalType } from "../../../types/Goal/GoalType"
 import GoalAdd from "../../goal/goalAdd/goalAdd";
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { useState } from "react";
@@ -20,6 +20,7 @@ const ButtonAddNewGoal = ({ goalData, loadGoal }: ButtonAddNewGoalProps) => {
                 type="primary"
                 icon={<PlusCircleOutlined />}
                 iconPosition="end"
+                className="mb-4"
             >
                 Add A New Goal
             </Button>

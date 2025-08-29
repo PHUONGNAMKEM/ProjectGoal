@@ -1,6 +1,6 @@
 // import axios from "axios";
 import { RcFile } from "antd/es/upload";
-import { GoalType } from "../types/GoalType";
+import { GoalType } from "../types/Goal/GoalType";
 import { TaskType } from "../types/TaskType";
 import axios from "./axios.customize";
 import { AxiosResponse } from "axios";
@@ -103,7 +103,7 @@ const fetchGoalAPI = () => {
     return axios.get(URL_BACKEND)
 }
 
-const getGoalByIdAPI = (idGoal: string) => {
+const getGoalByIdAPI = (idGoal: string | undefined) => {
     const URL_BACKEND = `/api/goal/${idGoal}`;
     return axios.get(URL_BACKEND)
 }
@@ -285,7 +285,24 @@ const deleteTaskAPI = (idGoal: number | undefined, idTask: number | undefined) =
     return axios.delete(URL_BACKEND);
 }
 
-const createTypeofGoalAPI = (nameType: string, theme: string, idGoal: number) => {
+const addTypeofGoalToGoalTypeAPI = (idTypeGoal: number, idGoal: number) => {
+    const URL_BACKEND = `/api/goal/update/type-of-goal`;
+    const data = {
+        idTypeGoal,
+        idGoal
+    }
+    return axios.post(URL_BACKEND, data);
+}
+
+interface TypeofGoalResponse {
+    data: GoalType;
+    message: string;
+    success: boolean;
+    statusCode: number;
+}
+
+
+const createTypeofGoalAPI = (nameType: string, theme: string, idGoal: number | undefined): Promise<TypeofGoalResponse> => {
     const URL_BACKEND = `api/type-of-goal/${idGoal}`;
     const data = {
         nameType,
@@ -303,7 +320,16 @@ const updateTypeofGoalAPI = (nameType: string | undefined, theme: string | undef
     return axios.put(URL_BACKEND, data);
 }
 
-const deleteTypeofGoalAPI = (idTypeGoal: number) => {
+const deleteTypeofGoalAPI = (idTypeGoal: number, idGoal: number) => {
+    const URL_BACKEND = `api/type-of-goal/`;
+    const data = {
+        idGoal,
+        idTypeGoal
+    }
+    return axios.delete(URL_BACKEND, { data });
+}
+
+const deleteAllTypeofGoalAPI = (idTypeGoal: number) => {
     const URL_BACKEND = `api/type-of-goal/${idTypeGoal}`;
     return axios.delete(URL_BACKEND);
 }
@@ -315,5 +341,6 @@ export {
     updateGoalAPI, getTypeofGoalByIdAPI, getTaskByIdGoal, changeStatusTask, getAllColumnAPI,
     createColumnAPI, deleteColumnAPI, createTaskAPI, updateTaskColumn, updateTaskOrders,
     updateTitleColumnAPI, updateTitleTaskAPI, deleteTaskAPI, getGoalByIdAPI, getAllTypeofGoal,
-    createTypeofGoalAPI, updateTypeofGoalAPI, deleteTypeofGoalAPI
+    createTypeofGoalAPI, updateTypeofGoalAPI, deleteTypeofGoalAPI, deleteAllTypeofGoalAPI,
+    addTypeofGoalToGoalTypeAPI
 }

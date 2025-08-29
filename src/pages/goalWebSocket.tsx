@@ -3,7 +3,7 @@ import { Col, Row } from "antd";
 import Goal from "../components/goal/goalComponent/goalComponent";
 import { useEffect, useRef, useState } from "react";
 import { fetchGoalAPI } from "../services/api.me.service";
-import { GoalType } from "../types/GoalType";
+import { GoalType } from "../types/Goal/GoalType";
 import { io, Socket } from "socket.io-client";
 
 

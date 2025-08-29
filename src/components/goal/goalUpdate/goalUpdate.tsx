@@ -1,24 +1,28 @@
 import { Col, DatePicker, Flex, GetProp, Image, Input, Modal, notification, Radio, Row, Upload, UploadFile, } from "antd";
 import { useEffect, useState } from "react";
 import './goalUpdate.scss';
-import { GoalType } from "../../../types/GoalType";
+import { GoalType } from "../../../types/Goal/GoalType";
 import dayjs, { Dayjs } from "dayjs";
 import { updateGoalAPI } from "../../../services/api.me.service";
 import RichEditor2 from "../../richTextEditor/RichEditor2";
 import { RcFile, UploadProps } from "antd/es/upload";
 import { PlusOutlined } from "@ant-design/icons";
-import { GoalLabel } from "../../../types/GoalLabel";
 import TypeOfGoal from "../typeofGoal/typeofGoal";
+import { TypeofGoal } from "../../../types/Goal/TypeofGoal";
+import TypeofGoalUpdate from "../typeofGoal/typeofGoalUpdate/typeofGoalUpdate";
+import ButtonAddNewTypeofGoal from "../typeofGoal/typeofGoalAdd/buttonAddNewTypeofGoal";
 
 interface GoalUpdateProps {
     isModalOpen: boolean;
     setIsModalOpen: (open: boolean) => void;
     goal: GoalType;
     loadGoal: () => void;
-    typeofGoalData: GoalLabel[];
+    typeofGoalData: TypeofGoal[];
+    allTypeofGoalData: TypeofGoal[];
+    loadTypeofGoal: () => void;
 }
 
-const GoalUpdate = ({ isModalOpen, setIsModalOpen, goal, loadGoal, typeofGoalData }: GoalUpdateProps) => {
+const GoalUpdate = ({ isModalOpen, setIsModalOpen, goal, loadGoal, typeofGoalData, allTypeofGoalData, loadTypeofGoal }: GoalUpdateProps) => {
 
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("Something description for Goal");
@@ -136,79 +140,104 @@ const GoalUpdate = ({ isModalOpen, setIsModalOpen, goal, loadGoal, typeofGoalDat
                 onCancel={() => resetAndCloseModal()}
                 maskClosable={false}
                 okText={"UPDATE"}
+                width={"80%"}
             >
-                <div
-                    style={{
-                        display: "flex", gap: "15px", flexDirection: "column"
-                    }}
-                >
-                    <div>
-                        <span>Title</span>
-                        <Input
-                            value={title}
-                            onChange={(event) => setTitle(event.target.value)} />
-                    </div>
-                    <div>
-                        <span>Description</span>
-                        <RichEditor2
-                            value={description}
-                            onChange={(value) => {
-                                setDescription(value)
-                            }}
-                            key={isModalOpen.toString()}
-                        />
-                    </div>
-                    <div>
-                        <span>End Date</span>
-                        <DatePicker value={endDate} onChange={(date) => setEndDate(date)} style={{ width: '100%' }} />
-                    </div>
-                    <div>
-                        <div style={{ width: "100%" }}>
-                            <Radio.Group onChange={handleChangePublic} value={isPublic}>
-                                <Radio value={true}>Public</Radio>
-                                <Radio value={false}>No Public</Radio>
-                            </Radio.Group>
+                <div className="flex flex-col gap-4 md:flex-row">
+                    <div className="flex flex-col w-full md:w-[50%] justify-between">
+                        <div>
+                            <span>Title</span>
+                            <Input
+                                value={title}
+                                onChange={(event) => setTitle(event.target.value)} />
+                        </div>
+                        <div>
+                            <span>Description</span>
+                            <RichEditor2
+                                value={description}
+                                onChange={(value) => {
+                                    setDescription(value)
+                                }}
+                                key={isModalOpen.toString()}
+                            />
+                        </div>
+                        <div>
+                            <span>End Date</span>
+                            <DatePicker value={endDate} onChange={(date) => setEndDate(date)} style={{ width: '100%' }} />
+                        </div>
+                        <div>
+                            <div style={{ width: "100%" }}>
+                                <Radio.Group onChange={handleChangePublic} value={isPublic}>
+                                    <Radio value={true}>Public</Radio>
+                                    <Radio value={false}>No Public</Radio>
+                                </Radio.Group>
+                            </div>
                         </div>
                     </div>
-                    <div>
-                        <img
-                            style={{
-                                width: "100%",
-                                height: "100%",
-                                objectFit: "contain"
-                            }}
-                            src={displayImage}
-                        />
-                    </div>
-                    <div>
-                        <Upload
-                            listType="picture-card"
-                            // fileList={fileList}
-                            onPreview={handlePreview}
-                            onChange={handleChangeFile}
-                        >
-                            {fileList.length >= 1 ? null : uploadButton}
-                        </Upload>
-                        {previewImage && (
-                            <Image
-                                wrapperStyle={{ display: 'none' }}
-                                preview={{
-                                    visible: previewOpen,
-                                    onVisibleChange: (visible) => setPreviewOpen(visible),
-                                    afterOpenChange: (visible) => !visible && setPreviewImage(''),
-                                }}
-                                src={previewImage}
-                            />
-                        )}
-                    </div>
-                    <TypeOfGoal
-                        idGoal={goal.idGoal}
-                        typeofGoalData={typeofGoalData}
-                        goal={goal}
-                        loadGoal={loadGoal}
-                    />
-                </div>
 
+
+                    <div className="flex flex-col w-full md:w-[50%] justify-between">
+                        <div>
+                            <img
+                                style={{
+                                    width: "100%",
+                                    height: "100%",
+                                    objectFit: "contain"
+                                }}
+                                src={displayImage}
+                            />
+                        </div>
+                        <div>
+                            <Upload
+                                style={{ width: 50 }}
+                                listType="picture-card"
+                                // fileList={fileList}
+                                onPreview={handlePreview}
+                                onChange={handleChangeFile}
+                            >
+                                {fileList.length >= 1 ? null : uploadButton}
+                            </Upload>
+                            {previewImage && (
+                                <Image
+                                    wrapperStyle={{ display: 'none' }}
+                                    preview={{
+                                        visible: previewOpen,
+                                        onVisibleChange: (visible) => setPreviewOpen(visible),
+                                        afterOpenChange: (visible) => !visible && setPreviewImage(''),
+                                    }}
+                                    src={previewImage}
+                                />
+                            )}
+                        </div>
+                        <TypeOfGoal
+                            idGoal={goal.idGoal}
+                            typeofGoalData={typeofGoalData}
+                            goal={goal}
+                            loadGoal={loadGoal}
+                            allTypeofGoalData={allTypeofGoalData}
+                            loadTypeofGoal={loadTypeofGoal}
+                        />
+
+                        <div className="text-xl">
+                            <ButtonAddNewTypeofGoal
+                                idGoal={goal.idGoal}
+                                goalData={goal}
+                                loadGoal={loadGoal}
+                                loadTypeofGoal={loadTypeofGoal}
+                            />
+                        </div>
+
+                        <div>
+                            {/* <TypeofGoalUpdate
+                    isModalTypeofGoalUpdateOpen={isModalTypeofGoalUpdateOpen}
+                    setIsModalTypeofGoalUpdateOpen={setIsModalTypeofGoalUpdateOpen}
+                    typeofGoalData={typeofGoalData}
+                    goal={goal}
+                    loadGoal={loadGoal}
+                /> */}
+                        </div>
+                    </div>
+                    <div />
+                </div>
 
                 {/* <Row gutter={16}>
                     <Col className="gutter-row" span={6}>

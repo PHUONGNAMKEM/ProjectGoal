@@ -2,7 +2,7 @@
   display: flex;
   justify-content: end;
   align-items: center;
-  margin-right: 2rem;
+  // margin-right: 16px;
   height: 100%;
 }
 
@@ -41,6 +41,10 @@
   }
 }
 
-.headerBody {
-  background-color: var(--theme-current) !important;
+// .headerBody {
+//   background-color: var(--theme-current) !important;
+// }
+
+.ant-breadcrumb ol li {
+  color: var(--text-color) !important;
 }

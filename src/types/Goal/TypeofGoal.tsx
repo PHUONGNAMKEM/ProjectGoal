@@ -1,6 +1,6 @@
-export interface GoalLabel {
+export interface TypeofGoal {
     idTypeGoal: number,
     nameType: string,
-    idGoal: number;
+    // idGoal: number;
     theme: string
 }

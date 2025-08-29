@@ -2,7 +2,7 @@ import { Button, ColorPicker, DatePicker, Dropdown, Flex, GetProp, Image, Input,
 import { useEffect, useState } from "react";
 import { HiOutlineBookmark } from "react-icons/hi";
 import { Link } from "react-router-dom";
-import { GoalType } from "../../../../types/GoalType";
+import { GoalType } from "../../../../types/Goal/GoalType";
 import dayjs, { Dayjs, extend } from "dayjs";
 import { DashOutlined, PlusOutlined, SettingOutlined } from "@ant-design/icons";
 import { createGoalAPI, createTypeofGoalAPI, deleteGoalAPI } from "../../../../services/api.me.service";
@@ -15,10 +15,11 @@ interface TypeofGoalAddProps {
     isModalOpen: boolean;
     setIsModalOpen: (open: boolean) => void;
     loadGoal: () => void;
-    idGoal: number;
+    idGoal: number | undefined;
+    loadTypeofGoal: () => void;
 }
 
-const TypeofGoalAdd = ({ goalData, isModalOpen, setIsModalOpen, loadGoal, idGoal }: TypeofGoalAddProps) => {
+const TypeofGoalAdd = ({ goalData, isModalOpen, setIsModalOpen, loadGoal, idGoal, loadTypeofGoal }: TypeofGoalAddProps) => {
 
     const [nameType, setNameType] = useState("");
     const [colorHex, setColorHex] = useState('#1677ff');
@@ -51,7 +52,7 @@ const TypeofGoalAdd = ({ goalData, isModalOpen, setIsModalOpen, loadGoal, idGoal
                 resetAndCloseModal();
             }
             else {
-                // throw new Error(res?. || "Unexpected response");
+                throw new Error(res.message || "Unexpected response");
             }
 
             console.log(">>> check res: ", res);
@@ -71,6 +72,7 @@ const TypeofGoalAdd = ({ goalData, isModalOpen, setIsModalOpen, loadGoal, idGoal
         setColorHex("#1677ff");
         setIsModalOpen(false);
         loadGoal();
+        loadTypeofGoal();
     };
 
     return (

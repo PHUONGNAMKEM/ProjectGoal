@@ -8,7 +8,8 @@ import LoginPage from './pages/login.tsx';
 import RegisterPage from './pages/register.tsx';
 import BookPage from './pages/book.jsx';
 import UserPage from './pages/user.jsx';
-import "./styles/global.css"
+import "./styles/global.scss"
+
 // import TodoApp from './components/todo/TodoApp.jsx';
 import ErrorPage from './pages/error.tsx';
 import SettingPage from './pages/setting.tsx';
@@ -19,6 +20,7 @@ import GoalPage from './pages/goal.tsx';
 import TaskPage from './pages/task.tsx';
 import GoalDetail from './components/goal/goalDetail/goalDetail.tsx';
 import Analytics from './pages/analytics.tsx';
+import { ThemeProvider } from './components/context/ThemeContext.tsx';
 
 const router = createBrowserRouter([
   {
@@ -34,20 +36,20 @@ const router = createBrowserRouter([
           //   index: true,
           //   element: <TodoApp />
           // },
-          {
-            path: "/users",
-            element: <UserPage />,
-          },
-          {
-            path: "/api/users",
-            element: <UserPage />,
-          },
-          {
-            path: "/books",
-            element: (<PrivateRoute>
-              <BookPage />
-            </PrivateRoute>),
-          },
+          // {
+          //   path: "/users",
+          //   element: <UserPage />,
+          // },
+          // {
+          //   path: "/api/users",
+          //   element: <UserPage />,
+          // },
+          // {
+          //   path: "/books",
+          //   element: (<PrivateRoute>
+          //     <BookPage />
+          //   </PrivateRoute>),
+          // },
           {
             path: "/settings",
             element: <SettingPage />,
@@ -91,7 +93,9 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')!).render(
   // <React.StrictMode>
   <AuthWrapper>
-    <RouterProvider router={router} />
+    <ThemeProvider>
+      <RouterProvider router={router} />
+    </ThemeProvider>
   </AuthWrapper>
   // </React.StrictMode>,
 )

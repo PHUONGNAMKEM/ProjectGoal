@@ -33,24 +33,30 @@
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "react-icons": "5.5.0",
+    "react-joyride": "2.9.3",
     "react-quill": "2.0.0",
     "react-router-dom": "6.23.1",
     "socket.io-client": "4.8.1",
+    "styled-components": "^6.1.19",
     "tailwindcss": "^4.1.11"
   },
   "devDependencies": {
     "@eslint/eslintrc": "3.3.1",
     "@eslint/js": "9.29.0",
+    "@tailwindcss/postcss": "^4.1.12",
     "@types/react": "18.3.3",
     "@types/react-dom": "18.3.0",
     "@vitejs/plugin-react-swc": "3.7.0",
+    "autoprefixer": "^10.4.21",
     "eslint": "8.57.1",
     "eslint-plugin-react": "7.34.2",
     "eslint-plugin-react-hooks": "4.6.2",
     "eslint-plugin-react-refresh": "0.4.7",
     "globals": "16.2.0",
+    "postcss": "^8.5.6",
     "sass": "1.89.2",
     "typescript-eslint": "8.34.1",
-    "vite": "5.2.12"
+    "vite": "5.2.12",
+    "vite-tsconfig-paths": "5.1.4"
   }
 }

@@ -1,8 +1,8 @@
 import { ClockCircleOutlined } from "@ant-design/icons";
 import { Timeline } from "antd";
 import { useEffect, useState } from "react";
-import { GoalType } from "../types/GoalType";
-import { GoalLabel } from "../types/GoalLabel";
+import { GoalType } from "../types/Goal/GoalType";
+import { GoalLabel } from "../types/TypeofGoal";
 import { fetchGoalAPI, getTypeofGoalByIdAPI } from "../services/api.me.service";
 import ButtonAddNewGoal from "../components/layout/buttonAddNewGoal/buttonAddNewGoal";
 import { Link } from "react-router-dom";
